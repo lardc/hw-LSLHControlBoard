@@ -75,47 +75,19 @@ void INITCFG_ConfigSPI()
 void INITCFG_ConfigADC()
 {
 	RCC_ADC_Clk_EN(ADC_12_ClkEN);
-	RCC_ADC_Clk_EN(ADC_34_ClkEN);
 
 	ADC1_2_SetDualMode(true);
-	ADC3_4_SetDualMode(true);
 
-	// ADC1
 	ADC_Calibration(ADC1);
 	ADC_TrigConfig(ADC1, ADC12_TIM2_TRGO, RISE);
 	ADC_ChannelSeqReset(ADC1);
-	ADC_ChannelSet_Sequence(ADC1, ADC1_IG_CHANNEL, 1);
+	ADC_ChannelSet_Sequence(ADC1, ADC1_ID_CHANNEL, 1);
+	ADC_ChannelSet_Sequence(ADC1, ADC1_VD_CHANNEL, 1);
 	ADC_ChannelSeqLen(ADC1, 1);
 	ADC_DMAConfig(ADC1);
 	ADC_Enable(ADC1);
 
-	// ADC2
-	ADC_Calibration(ADC2);
-	ADC_ChannelSeqReset(ADC2);
-	ADC_ChannelSet_Sequence(ADC2, ADC2_VG_CHANNEL, 1);
-	ADC_ChannelSeqLen(ADC2, 1);
-	ADC_DMAConfig(ADC2);
-	ADC_Enable(ADC2);
-
-	// ADC3
-	ADC_Calibration(ADC3);
-	ADC_TrigConfig(ADC3, ADC34_TIM1_TRGO, RISE);
-	ADC_ChannelSeqReset(ADC3);
-	ADC_ChannelSet_Sequence(ADC3, ADC3_ID_CHANNEL, 1);
-	ADC_ChannelSeqLen(ADC3, 1);
-	ADC_DMAConfig(ADC3);
-	ADC_Enable(ADC3);
-
-	// ADC4
-	ADC_Calibration(ADC4);
-	ADC_ChannelSeqReset(ADC4);
-	ADC_ChannelSet_Sequence(ADC4, ADC4_VD_CHANNEL, 1);
-	ADC_ChannelSeqLen(ADC4, 1);
-	ADC_DMAConfig(ADC4);
-	ADC_Enable(ADC4);
-
 	ADC_SamplingStart(ADC1);
-	ADC_SamplingStart(ADC3);
 }
 //------------------------------------
 
