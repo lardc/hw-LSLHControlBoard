@@ -21,13 +21,13 @@ void LL_ToggleBoardLED()
 
 void LL_IdLowRange(bool State)
 {
-	GPIO_SetState(GPIO_ID_LOW_RANGE, !State);
+
 }
 //------------------------------------
 
 bool LL_IsIdLowRange()
 {
-	return !GPIO_GetState(GPIO_ID_LOW_RANGE);
+	return 0;
 }
 //------------------------------------
 
@@ -54,11 +54,6 @@ void LL_WriteDACx(uint16_t Data)
 	GPIO_SetState(GPIO_DAC_CS, false);
 	SPI_WriteByte(SPI1, Data);
 	GPIO_SetState(GPIO_DAC_CS, true);
-	DELAY_US(1);
-
-	GPIO_SetState(GPIO_DAC_LDAC, false);
-	DELAY_US(1);
-	GPIO_SetState(GPIO_DAC_LDAC, true);
 	DELAY_US(1);
 }
 //-----------------------------

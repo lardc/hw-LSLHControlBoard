@@ -24,8 +24,6 @@ void INITCFG_ConfigGPIO()
 	RCC_GPIO_Clk_EN(PORTB);
 	
 	// Аналоговые входы
-	GPIO_InitAnalog(GPIO_MEASURE_IG);
-	GPIO_InitAnalog(GPIO_MEASURE_VG);
 	GPIO_InitAnalog(GPIO_MEASURE_ID);
 	GPIO_InitAnalog(GPIO_MEASURE_VD);
 	
@@ -34,16 +32,11 @@ void INITCFG_ConfigGPIO()
 	GPIO_InitPushPullOutput(GPIO_SYNC_POWER_CELL);
 	GPIO_InitPushPullOutput(GPIO_SYNC_SCOPE);
 	GPIO_InitPushPullOutput(GPIO_DAC_CS);
-	GPIO_InitPushPullOutput(GPIO_DAC_LDAC);
-
-	// Выходы с OpenDrain
-	GPIO_InitOpenDrainOutput(GPIO_IG_PULSE, NoPull);
-	GPIO_InitOpenDrainOutput(GPIO_ID_LOW_RANGE, NoPull);
+	GPIO_InitPushPullOutput(GPIO_IG_PULSE);
 
 	// Начальная установка состояний
 	GPIO_SetState(GPIO_DAC_CS, true);
-	GPIO_SetState(GPIO_DAC_LDAC, true);
-	GPIO_SetState(GPIO_IG_PULSE, true);
+	GPIO_SetState(GPIO_IG_PULSE, false);
 	
 	// Альтернативные функции
 	GPIO_InitAltFunction(GPIO_ALT_CAN_RX, AltFn_9);
