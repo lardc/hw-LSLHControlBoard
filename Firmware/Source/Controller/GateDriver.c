@@ -14,7 +14,7 @@ void GATE_PulseOutput(bool State)
 }
 //------------------------------------
 
-void GATE_IgPulse(uint16_t Value, uint16_t PulseWidth)
+void GATE_IgPulse(uint16_t PulseWidth)
 {
 	LL_PulseIg(true);
 	DELAY_US(PulseWidth);
