@@ -261,14 +261,9 @@ void LOGIC_ProcessPulse()
 
 	// Подготовка оцифровки
 	IT_DMAFlagsReset();
-	DMA_ChannelReload(DMA_ADC_IG_CHANNEL, VALUES_GATE_DMA_SIZE);
-	DMA_ChannelReload(DMA_ADC_VG_CHANNEL, VALUES_GATE_DMA_SIZE);
-	DMA_ChannelReload(DMA_ADC_ID_CHANNEL, VALUES_POWER_DMA_SIZE);
-	DMA_ChannelReload(DMA_ADC_VD_CHANNEL, VALUES_POWER_DMA_SIZE);
-	DMA_ChannelEnable(DMA_ADC_IG_CHANNEL, true);
-	DMA_ChannelEnable(DMA_ADC_VG_CHANNEL, true);
-	DMA_ChannelEnable(DMA_ADC_ID_CHANNEL, true);
-	DMA_ChannelEnable(DMA_ADC_VD_CHANNEL, true);
+	DMA_ChannelReload(DMA_ADC, VALUES_POWER_DMA_SIZE);
+	DMA_ChannelEnable(DMA_ADC, true);
+
 
 	// Запуск оцифровки импульса тока и напряжения в силовой цепи
 	TIM_Start(TIM1);
@@ -305,8 +300,6 @@ void LOGIC_ProcessPulse()
 		MEASURE_ConvertIdLow((uint16_t *)MEMBUF_DMA_Id, VALUES_POWER_DMA_SIZE);
 	else
 		MEASURE_ConvertId((uint16_t *)MEMBUF_DMA_Id, VALUES_POWER_DMA_SIZE);
-	MEASURE_ConvertVg((uint16_t *)MEMBUF_DMA_Vg, VALUES_GATE_DMA_SIZE);
-	MEASURE_ConvertIg((uint16_t *)MEMBUF_DMA_Ig, VALUES_GATE_DMA_SIZE);
 }
 // ----------------------------------------
 
@@ -332,8 +325,6 @@ void LOGIC_SaveResults()
 		DataTable[REG_DUT_VOLTAGE] = MEASURE_InstantValues((uint16_t *)MEMBUF_DMA_Vd, VALUES_POWER_DMA_SIZE);
 
 	DataTable[REG_DUT_CURRENT] = MEASURE_InstantValues((uint16_t *)MEMBUF_DMA_Id, VALUES_POWER_DMA_SIZE);
-	DataTable[REG_GATE_VOLTAGE] = MEASURE_InstantValues((uint16_t *)MEMBUF_DMA_Vg, VALUES_GATE_DMA_SIZE);
-	DataTable[REG_GATE_CURRENT] = MEASURE_InstantValues((uint16_t *)MEMBUF_DMA_Ig, VALUES_GATE_DMA_SIZE);
 
 
 	if((DataTable[REG_DUT_VOLTAGE] > VOLTAGE_MAX_VALUE) || (DataTable[REG_DUT_VOLTAGE] < VOLTAGE_MIN_VALUE))

@@ -135,8 +135,6 @@
 // Endpoints
 #define EP16_DATA_ID					1	// Оцифрованные данные Id
 #define EP16_DATA_VD					2	// Оцифрованные данные Vd
-#define EP16_DATA_IG					3	// Оцифрованные данные Ig
-#define EP16_DATA_VG					4	// Оцифрованные данные Vg
 
 // Operation results
 #define OPRESULT_NONE					0	// No information or not finished
