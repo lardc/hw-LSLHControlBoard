@@ -60,11 +60,10 @@ void CONTROL_Init()
 {
 	pInt16U cnt = (pInt16U)&CONTROL_Values_Counter;
 	// Переменные для конфигурации EndPoint
-	Int16U EPIndexes[EP_COUNT] = {EP16_DATA_ID, EP16_DATA_VD, EP16_DATA_IG, EP16_DATA_VG};
-	Int16U EPSized[EP_COUNT] = {VALUES_x_SIZE, VALUES_x_SIZE, VALUES_x_SIZE, VALUES_x_SIZE};
-	pInt16U EPCounters[EP_COUNT] = {cnt, cnt, cnt, cnt};
-	pInt16U EPDatas[EP_COUNT] = {(pInt16U)MEMBUF_EP_Id, (pInt16U)MEMBUF_EP_Vd, (pInt16U)MEMBUF_EP_Ig,
-			(pInt16U)MEMBUF_EP_Vg};
+	Int16U EPIndexes[EP_COUNT] = {EP16_DATA_ID, EP16_DATA_VD};
+	Int16U EPSized[EP_COUNT] = {VALUES_x_SIZE, VALUES_x_SIZE};
+	pInt16U EPCounters[EP_COUNT] = {cnt, cnt};
+	pInt16U EPDatas[EP_COUNT] = {(pInt16U)MEMBUF_EP_Id, (pInt16U)MEMBUF_EP_Vd};
 	
 	// Конфигурация сервиса работы Data-table и EPROM
 	EPROMServiceConfig EPROMService = {(FUNC_EPROM_WriteValues)&NFLASH_WriteDT, (FUNC_EPROM_ReadValues)&NFLASH_ReadDT};
@@ -377,8 +376,7 @@ void CONTROL_SaveDataToEndpoint()
 {
 	LOGIC_SaveToEndpoint((uint16_t *)MEMBUF_DMA_Vd, (uint16_t *)MEMBUF_EP_Vd, VALUES_POWER_DMA_SIZE);
 	LOGIC_SaveToEndpoint((uint16_t *)MEMBUF_DMA_Id, (uint16_t *)MEMBUF_EP_Id, VALUES_POWER_DMA_SIZE);
-	LOGIC_SaveToEndpoint((uint16_t *)MEMBUF_DMA_Vg, (uint16_t *)MEMBUF_EP_Vg, VALUES_GATE_DMA_SIZE);
-	LOGIC_SaveToEndpoint((uint16_t *)MEMBUF_DMA_Ig, (uint16_t *)MEMBUF_EP_Ig, VALUES_GATE_DMA_SIZE);
+
 	CONTROL_Values_Counter = VALUES_x_SIZE;
 }
 //-----------------------------------------------
