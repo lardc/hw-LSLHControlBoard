@@ -118,9 +118,6 @@ void CONTROL_ResetHardware()
 	LL_SyncPowerCell(false);
 	LL_SyncScope(false);
 	LL_IdLowRange(false);
-
-	GATE_SetVg(0);
-	GATE_SetIg(0);
 }
 //-----------------------------------------------
 

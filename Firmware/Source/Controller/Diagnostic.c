@@ -49,16 +49,6 @@ bool DIAG_HandleDiagnosticAction(uint16_t ActionID, uint16_t *pUserError)
 			}
 			break;
 			
-		case ACT_DBG_SET_GATE_VG:
-			if(CONTROL_State == DS_None)
-				GATE_SetVg(DataTable[REG_VG_VALUE]);
-			break;
-
-		case ACT_DBG_SET_GATE_IG:
-			if(CONTROL_State == DS_None)
-				GATE_SetIg(DataTable[REG_IG_VALUE]);
-			break;
-
 		default:
 			return false;
 	}

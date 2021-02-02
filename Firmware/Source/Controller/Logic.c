@@ -255,10 +255,6 @@ void LOGIC_ProcessPulse()
 	uint16_t GatePulseDelay = DataTable[REG_GATE_PULSE_DELAY];
 	uint16_t GatePulseTime = DataTable[REG_GATE_PULSE_TIME];
 
-	// Задание напряжения в цепи управления
-	GATE_SetVg(DataTable[REG_VG_VALUE]);
-	DELAY_US(TIME_VG_STAB);
-
 	// Подготовка оцифровки
 	DMA_ChannelReload(DMA_ADC, VALUES_POWER_DMA_SIZE);
 	DMA_ChannelEnable(DMA_ADC, true);
