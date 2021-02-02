@@ -6,65 +6,32 @@
 #include "Controller.h"
 #include "Logic.h"
 #include "Global.h"
-
-// Variables
-//
-static volatile bool IgCompleted, VgCompleted, IdCompleted, VdCompleted;
+#include "MemBuffers.h"
 
 // Functions
-//
-bool IT_DMASampleCompleted()
-{
-	return IgCompleted && VgCompleted && IdCompleted && VdCompleted;
-}
-//-----------------------------------------
-
-void IT_DMAFlagsReset()
-{
-	IgCompleted = VgCompleted = IdCompleted = VdCompleted = false;
-}
 //-----------------------------------------
 
 void DMA1_Channel1_IRQHandler()
 {
-	// Ig
 	if(DMA_IsTransferComplete(DMA1, DMA_ISR_TCIF1))
 	{
-		IgCompleted = true;
+		for (uint8_t i = 0; i < VALUES_POWER_DMA_SIZE; ++i)
+		{
+			if(ADC_CHANNEL_SWAP)
+			{
+				MEMBUF_DMA_Id[i] += MEMBUF_DMA[i] >> 16;
+				MEMBUF_DMA_Vd[i] += MEMBUF_DMA[i] &  0xFFFF;
+			}
+			else
+			{
+				MEMBUF_DMA_Vd[i] += MEMBUF_DMA[i] >> 16;
+				MEMBUF_DMA_Id[i] += MEMBUF_DMA[i] &  0xFFFF;
+			}
+
+			MEMBUF_DMA[i] = 0;
+		}
+
 		DMA_TransferCompleteReset(DMA1, DMA_IFCR_CTCIF1);
-	}
-}
-//-----------------------------------------
-
-void DMA2_Channel1_IRQHandler()
-{
-	// Vg
-	if(DMA_IsTransferComplete(DMA2, DMA_ISR_TCIF1))
-	{
-		VgCompleted = true;
-		DMA_TransferCompleteReset(DMA2, DMA_IFCR_CTCIF1);
-	}
-}
-//-----------------------------------------
-
-void DMA2_Channel5_IRQHandler()
-{
-	// Id
-	if(DMA_IsTransferComplete(DMA2, DMA_ISR_TCIF5))
-	{
-		IdCompleted = true;
-		DMA_TransferCompleteReset(DMA2, DMA_IFCR_CTCIF5);
-	}
-}
-//-----------------------------------------
-
-void DMA2_Channel2_IRQHandler()
-{
-	// Vd
-	if(DMA_IsTransferComplete(DMA2, DMA_ISR_TCIF2))
-	{
-		VdCompleted = true;
-		DMA_TransferCompleteReset(DMA2, DMA_IFCR_CTCIF2);
 	}
 }
 //-----------------------------------------

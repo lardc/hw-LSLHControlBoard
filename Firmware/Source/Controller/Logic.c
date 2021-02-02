@@ -260,10 +260,8 @@ void LOGIC_ProcessPulse()
 	DELAY_US(TIME_VG_STAB);
 
 	// Подготовка оцифровки
-	IT_DMAFlagsReset();
 	DMA_ChannelReload(DMA_ADC, VALUES_POWER_DMA_SIZE);
 	DMA_ChannelEnable(DMA_ADC, true);
-
 
 	// Запуск оцифровки импульса тока и напряжения в силовой цепи
 	TIM_Start(TIM1);

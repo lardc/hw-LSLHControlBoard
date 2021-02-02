@@ -36,6 +36,10 @@
 // ADC
 #define ADC1_ID_CHANNEL					4			// АЦП1_4 номер канала измерения Id
 #define ADC1_VD_CHANNEL					3			// АЦП1_3 номер канала измерения Vd
+
+#define ADC_CHANNEL_SWAP				TRUE		// Инверсия каналов при чтении результата
 // ----------------------------------------------
+
+
 
 #endif // __SYSCONFIG_H
