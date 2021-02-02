@@ -30,19 +30,6 @@
 #define VD_OFFSET_DEF			65530
 #define VD_K_DEF				1660
 
-//
-#define IG_OFFSET_DEF			1
-#define IG_K_DEF				349
-
-#define VG_OFFSET_DEF			65446
-#define VG_K_DEF				3440
-
-//
-#define IG_SET_OFFSET_DEF		64140
-#define IG_SET_K_DEF			1800
-#define VG_SET_OFFSET_DEF		270
-#define VG_SET_K_DEF			473
-
 // in pcs
 #define LSLPC_COUNT_MIN			1
 #define LSLPC_COUNT_MAX			2
