@@ -274,9 +274,6 @@ void LOGIC_ProcessPulse()
 	if(GatePulseDelay)
 		DELAY_US(GatePulseDelay);
 
-	// Запуск оцифровки импульса тока и напряжения в цепи управления
-	TIM_Start(TIM2);
-
 	// Сигнал отпирания DUT
 	GATE_IgPulse(DataTable[REG_IG_VALUE], GatePulseTime);
 
@@ -290,7 +287,6 @@ void LOGIC_ProcessPulse()
 
 	// Завершение оцифровки
 	TIM_Stop(TIM1);
-	TIM_Stop(TIM2);
 
 	// Пересчёт значений
 	MEASURE_ConvertVd((uint16_t *)MEMBUF_DMA_Vd, VALUES_POWER_DMA_SIZE);

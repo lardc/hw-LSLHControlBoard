@@ -112,15 +112,6 @@ void INITCFG_ConfigTimer1()
 }
 //------------------------------------
 
-void INITCFG_ConfigTimer2()
-{
-	TIM_Clock_En(TIM_2);
-	TIM_Config(TIM2, SYSCLK, TIMER2_uS);
-	TIM_DMA(TIM2, DMAEN);
-	TIM_MasterMode(TIM2, MMS_UPDATE);
-}
-//------------------------------------
-
 void INITCFG_ConfigDMA()
 {
 	DMA_Clk_Enable(DMA1_ClkEN);
