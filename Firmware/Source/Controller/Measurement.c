@@ -63,19 +63,6 @@ void MEASURE_ConvertIdLow(uint16_t *InputArray, uint16_t DataLength)
 }
 //------------------------------------
 
-void MEASURE_ConvertVg(uint16_t *InputArray, uint16_t DataLength)
-{
-	MEASURE_ConvertADCtoValx(InputArray, DataLength, REG_VG_OFFSET, REG_VG_K, REG_VG_P0, REG_VG_P1,
-			REG_VG_P2);
-}
-//------------------------------------
-
-void MEASURE_ConvertIg(uint16_t *InputArray, uint16_t DataLength)
-{
-	MEASURE_ConvertADCtoValx(InputArray, DataLength, REG_IG_OFFSET, REG_IG_K, REG_IG_P0, REG_IG_P1,
-			REG_IG_P2);
-}
-//------------------------------------
 
 Int16U MEASURE_InstantValues(Int16U *InputArray, Int16U Size)
 {
