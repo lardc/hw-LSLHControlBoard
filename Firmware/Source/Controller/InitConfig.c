@@ -81,9 +81,12 @@ void INITCFG_ConfigADC()
 	ADC_Calibration(ADC1);
 	ADC_TrigConfig(ADC1, ADC12_TIM2_TRGO, RISE);
 	ADC_ChannelSeqReset(ADC1);
+
 	ADC_ChannelSet_Sequence(ADC1, ADC1_ID_CHANNEL, 1);
-	ADC_ChannelSet_Sequence(ADC1, ADC1_VD_CHANNEL, 1);
-	ADC_ChannelSeqLen(ADC1, 1);
+	ADC_ChannelSet_Sequence(ADC1, ADC1_VD_CHANNEL, 2);
+
+	ADC_ChannelSeqLen(ADC1, 2);
+
 	ADC_DMAConfig(ADC1);
 	ADC_Enable(ADC1);
 
