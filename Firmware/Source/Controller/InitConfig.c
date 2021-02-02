@@ -31,11 +31,11 @@ void INITCFG_ConfigGPIO()
 	GPIO_InitPushPullOutput(GPIO_LED);
 	GPIO_InitPushPullOutput(GPIO_SYNC_POWER_CELL);
 	GPIO_InitPushPullOutput(GPIO_SYNC_SCOPE);
-	GPIO_InitPushPullOutput(GPIO_DAC_CS);
+	GPIO_InitPushPullOutput(GPIO_AMP_CS);
 	GPIO_InitPushPullOutput(GPIO_IG_PULSE);
 
 	// Начальная установка состояний
-	GPIO_SetState(GPIO_DAC_CS, true);
+	GPIO_SetState(GPIO_AMP_CS, true);
 	GPIO_SetState(GPIO_IG_PULSE, false);
 	
 	// Альтернативные функции
@@ -67,8 +67,7 @@ void INITCFG_ConfigUART()
 
 void INITCFG_ConfigSPI()
 {
-	SPI_Init(SPI1, 3, false);
-	SPI_InvertClockPolarity(SPI1, true);
+	SPI_Init8b(SPI1, SPI_CR1_BR, FALSE);
 }
 //------------------------------------
 

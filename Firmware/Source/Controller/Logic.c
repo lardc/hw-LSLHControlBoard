@@ -246,7 +246,10 @@ void LOGIC_ResetCellsCurrent()
 
 void LOGIC_SelectCurrentRange(float Current)
 {
-
+	if(DataTable[REG_I_LOW_RANGE_LIMIT] < (uint16_t)Current)
+		LL_IdLowRange(TRUE);
+	else
+		LL_IdLowRange(FALSE);
 }
 // ----------------------------------------
 

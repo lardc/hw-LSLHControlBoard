@@ -5,6 +5,10 @@
 #include "Board.h"
 #include "Delay.h"
 
+// Variables
+//
+volatile bool IdLowRange = FALSE;
+
 // Functions
 //
 void LL_ToggleBoardLED()
@@ -15,13 +19,15 @@ void LL_ToggleBoardLED()
 
 void LL_IdLowRange(bool State)
 {
+	IdLowRange = State;
 
+	LL_WriteToShuntAmpl((uint8_t)IdLowRange << 2);
 }
 //------------------------------------
 
 bool LL_IsIdLowRange()
 {
-	return 0;
+	return IdLowRange;
 }
 //------------------------------------
 
@@ -42,3 +48,14 @@ void LL_PulseIg(bool State)
 	GPIO_SetState(GPIO_IG_PULSE, !State);
 }
 //------------------------------------
+
+void LL_WriteToShuntAmpl(volatile uint8_t Data)
+{
+	SPI_WriteByte8b(SPI1, Data);
+
+    for (i = 0; i < 100; ++i) asm("nop");
+	GPIO_SetState(GPIO_AMP_CS, TRUE);
+
+	for (i = 0; i < 100; ++i) asm("nop");
+	GPIO_SetState(GPIO_AMP_CS, FALSE);
+}
