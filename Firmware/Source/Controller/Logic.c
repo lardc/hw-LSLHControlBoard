@@ -255,34 +255,27 @@ void LOGIC_SelectCurrentRange(float Current)
 
 void LOGIC_ProcessPulse()
 {
-	uint16_t GatePulseDelay = DataTable[REG_GATE_PULSE_DELAY];
-	uint16_t GatePulseTime = DataTable[REG_GATE_PULSE_TIME];
-
 	// Подготовка оцифровки
-	DMA_ChannelReload(DMA_ADC, VALUES_POWER_DMA_SIZE);
+	DMA_ChannelReload(DMA_ADC, VALUES_POWER_DMA_SIZE * 2);
 	DMA_ChannelEnable(DMA_ADC, true);
+
+	// Сигнал отпирания DUT
+	LL_PulseIg(true);
+	DELAY_MS(5);
+
+	// запуск синхронизации LSLPC
+	LL_SyncPowerCell(true);
 
 	// Запуск оцифровки импульса тока и напряжения в силовой цепи
 	TIM_Start(TIM1);
 
-	// Запуск импульса тока в силовой цепи
+	// Запуск испульса синхронизации осц
 	LL_SyncScope(true);
-	LL_SyncPowerCell(true);
-
-	// Задержка сигнала управления
-	if(GatePulseDelay)
-		DELAY_US(GatePulseDelay);
-
-	// Сигнал отпирания DUT
-	GATE_IgPulse(GatePulseTime);
-
-	// Синхронизация по вершине
-	DELAY_US(TIME_PULSE_WIDTH / 2 - GatePulseDelay - GatePulseTime);
+	DELAY_MS(5);
 	LL_SyncScope(false);
-
-	// Синхронизация ячеек
-	DELAY_US(TIME_PULSE_WIDTH / 2);
+	DELAY_MS(5);
 	LL_SyncPowerCell(false);
+	LL_PulseIg(false);
 
 	// Завершение оцифровки
 	TIM_Stop(TIM1);
