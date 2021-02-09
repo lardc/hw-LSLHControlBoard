@@ -7,12 +7,9 @@
 #define ACT_FAULT_CLEAR					3	// Очистка fault
 #define ACT_WARNING_CLEAR				4	// Очистка warning
 
-//#define ACT_DBG_PULSE_ID_LOW_RANGE		10	// Импульс включения нижнего диапазона измерения Id
 #define ACT_DBG_PULSE_SYNC_SCPC			11	// Импульс синхронизации ячеек SCPC
 #define ACT_DBG_PULSE_IG				12	// Импульс включения подачи сигнала управления
 #define ACT_DBG_PULSE_SYNC_SCOPE		13	// Импульс синхронизации осциллографа
-//#define ACT_DBG_SET_GATE_VG				14	// Задание напряжения в цепи управления
-//#define ACT_DBG_SET_GATE_IG				15	// Задание тока в цепи управления
 
 #define ACT_START_TEST					100	// Запуск процесса измерения
 #define ACT_STOP_TEST					101	// Остановка процесса измерения
@@ -47,18 +44,6 @@
 #define REG_VD_P1						15	// Полином точной корректировки Vd P1 x1000
 #define REG_VD_P2						16	// Полином точной корректировки Vd P2 x1e6
 
-//#define REG_IG_OFFSET					17	// Смещение оцифрованного Ig (в тиках)
-//#define REG_IG_K						18	// Коэффициент пересчёта напряжения АЦП (в мВ) в Ig (в мА) х1000
-//#define REG_IG_P0						19	// Полином точной корректировки Ig P0 (в мА)
-//#define REG_IG_P1						20	// Полином точной корректировки Ig P1 x1000
-//#define REG_IG_P2						21	// Полином точной корректировки Ig P2 x1e6
-
-//#define REG_VG_OFFSET					22	// Смещение оцифрованного Vg (в тиках)
-//#define REG_VG_K						23	// Коэффициент пересчёта напряжения АЦП (в мВ) в Vg (в мВ) х1000
-//#define REG_VG_P0						24	// Полином точной корректировки Vg P0 (в мВ)
-//#define REG_VG_P1						25	// Полином точной корректировки Vg P1 x1000
-//#define REG_VG_P2						26	// Полином точной корректировки Vg P2 x1e6
-
 #define REG_PC_MAX_CURRENT				31	// Максимальный ток с одной силовой ячейки (в А)
 #define REG_PC_START_NID				32	// Стартовое значение NodeID для первой силовой ячейки
 #define REG_PC_LONG_TIMEOUT				33	// Длинный таймаут по операциям с ячейками (в мс)
@@ -67,18 +52,6 @@
 #define REG_ISET_P0						41	// Полином точной корректировки задания прямого тока P0 (в А)
 #define REG_ISET_P1						42	// Полином точной корректировки задания прямого тока P1 х1000
 #define REG_ISET_P2						43	// Полином точной корректировки задания прямого тока P2 х1е6
-
-//#define REG_VG_SET_OFFSET				50	// Смещение при преобразовании Vg -> DAC
-//#define REG_VG_SET_K					51	// Коэффициент преобразованиия Vg -> DAC
-//#define REG_VG_SET_P0					52	// Полином точной корректировки Vg P0 (в мВ)
-//#define REG_VG_SET_P1					53	// Полином точной корректировки Vg P1 x1000
-//#define REG_VG_SET_P2					54	// Полином точной корректировки Vg P2 x1e6
-
-//#define REG_IG_SET_OFFSET				55	// Смещение при преобразовании Ig -> DAC
-//#define REG_IG_SET_K					56	// Коэффициент преобразованиия Vg -> DAC
-//#define REG_IG_SET_P0					57	// Полином точной корректировки Ig P0 (в мA)
-//#define REG_IG_SET_P1					58	// Полином точной корректировки Ig P1 x1000
-//#define REG_IG_SET_P2					59	// Полином точной корректировки Ig P2 x1e6
 
 // Несохраняемы регистры чтения-записи
 #define REG_CURRENT_SETPOINT			140	// Уставка тока (в А)
