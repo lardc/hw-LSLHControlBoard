@@ -62,10 +62,10 @@ void LL_PulseIg(bool State)
 void LL_WriteToShuntAmpl(volatile uint8_t Data)
 {
 	SPI_WriteByte8b(SPI1, Data);
-
-    for (i = 0; i < 100; ++i) asm("nop");
+	
+	for (uint16_t i = 0; i < 100; ++i) asm("nop");
 	GPIO_SetState(GPIO_AMP_CS, TRUE);
-
-	for (i = 0; i < 100; ++i) asm("nop");
+	
+	for (uint16_t i = 0; i < 100; ++i) asm("nop");
 	GPIO_SetState(GPIO_AMP_CS, FALSE);
 }
