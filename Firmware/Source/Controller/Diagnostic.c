@@ -15,13 +15,6 @@ bool DIAG_HandleDiagnosticAction(uint16_t ActionID, uint16_t *pUserError)
 {
 	switch (ActionID)
 	{
-		case ACT_DBG_PULSE_ID_LOW_RANGE:
-			if(CONTROL_State == DS_None)
-			{
-				LL_IdLowRange(DataTable[REG_DBG]);
-			}
-			break;
-			
 		case ACT_DBG_PULSE_SYNC_SCPC:
 			if(CONTROL_State == DS_None)
 			{
