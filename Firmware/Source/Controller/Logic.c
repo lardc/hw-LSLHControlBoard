@@ -279,9 +279,12 @@ void LOGIC_ProcessPulse()
 	DELAY_MS(5);
 	LL_SyncPowerCell(false);
 	LL_PulseIg(false);
-	
+
 	// Завершение оцифровки
 	TIM_Stop(TIM1);
+
+	// Копирование из DMA в свои буферы
+	MEASURE_CopyFromDMA();
 
 	// Пересчёт значений
 	MEASURE_ConvertVd((uint16_t *)MEMBUF_Vd, MEMBUF_DMA_SIZE);

@@ -8,16 +8,18 @@
 #include "DataTable.h"
 #include "DeviceObjectDictionary.h"
 #include "stdlib.h"
+#include "MemBuffers.h"
 
 // Definitions
 //
 #define SAMPLING_AVG_NUM			15
-#define MAX_SAMPLES_CUTOFF_NUM		5
+#define MAX_SAMPLES_CUTOFF_NUM		10
 
 // Forward functions
 void MEASURE_ConvertADCtoValx(uint16_t *InputArray, uint16_t DataLength, uint16_t RegisterOffset,
 		uint16_t RegisterK, uint16_t RegisterP0, uint16_t RegisterP1, uint16_t RegisterP2);
 int MEASURE_SortCondition(const void *A, const void *B);
+void MEASURE_CopyFromDMA();
 
 // Functions
 //
@@ -113,3 +115,15 @@ void MEASURE_ArrayEMA(uint16_t *InputArray, uint16_t DataLength)
 		InputArray[i] = (uint16_t)(InputArray[i] * ADC_EMA_FACTOR + (1 - ADC_EMA_FACTOR) * InputArray[i - 1]);
 }
 //------------------------------------
+
+void MEASURE_CopyFromDMA()
+{
+	for(uint16_t i = 0; i < MEMBUF_DMA_SIZE; ++i)
+	{
+		MEMBUF_Id[i] = (uint16_t)(MEMBUF_DMA[i] >> 16);
+		MEMBUF_Vd[i] = (uint16_t)(MEMBUF_DMA[i] & 0xFFFF);
+		MEMBUF_DMA[i] = 0;
+	}
+
+	MEASURE_ArrayEMA((uint16_t *)MEMBUF_Id, MEMBUF_DMA_SIZE);
+}
