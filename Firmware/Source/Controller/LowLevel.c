@@ -33,13 +33,13 @@ bool LL_IsIdLowRange()
 
 void LL_SyncPowerCell(bool State)
 {
-	GPIO_SetState(GPIO_SYNC_POWER_CELL, State);
+	GPIO_SetState(GPIO_SYNC_POWER_CELL, !State);
 }
 //------------------------------------
 
 void LL_SyncScope(bool State)
 {
-	GPIO_SetState(GPIO_SYNC_SCOPE, State);
+	GPIO_SetState(GPIO_SYNC_SCOPE, !State);
 }
 //------------------------------------
 
