@@ -194,7 +194,7 @@ bool LOGIC_DistributeCurrent(float Current)
 	LOGIC_ResetCellsCurrent();
 	
 	// Запись значений тока
-	for(uint16_t i = 0; (i < LSLPC_COUNT_MAX) && (FractionCurrent > 0) && (IntCurrent > 0); ++i)
+	for(uint16_t i = 0; (i < LSLPC_COUNT_MAX) && (IntCurrent > 0); ++i)
 	{
 		if(PC_DataArray[i].IsActive)
 		{
