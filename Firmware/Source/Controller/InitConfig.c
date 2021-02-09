@@ -23,20 +23,26 @@ void INITCFG_ConfigGPIO()
 	RCC_GPIO_Clk_EN(PORTA);
 	RCC_GPIO_Clk_EN(PORTB);
 	
+	// Цифровые входы
+	GPIO_InitInput(GPIO_CUR_ERR, NoPull);
+
 	// Аналоговые входы
 	GPIO_InitAnalog(GPIO_MEASURE_ID);
 	GPIO_InitAnalog(GPIO_MEASURE_VD);
-	
+
 	// Выходы
 	GPIO_InitPushPullOutput(GPIO_LED);
-	GPIO_InitPushPullOutput(GPIO_SYNC_POWER_CELL);
-	GPIO_InitPushPullOutput(GPIO_SYNC_SCOPE);
 	GPIO_InitPushPullOutput(GPIO_AMP_CS);
-	GPIO_InitPushPullOutput(GPIO_IG_PULSE);
+
+	GPIO_InitOpenDrainOutput(GPIO_IG_PULSE, Pull_Up);
+	GPIO_InitOpenDrainOutput(GPIO_SYNC_POWER_CELL, Pull_Up);
+	GPIO_InitOpenDrainOutput(GPIO_SYNC_SCOPE, Pull_Up);
 
 	// Начальная установка состояний
-	GPIO_SetState(GPIO_AMP_CS, true);
-	GPIO_SetState(GPIO_IG_PULSE, false);
+	GPIO_SetState(GPIO_SYNC_POWER_CELL, true);
+	GPIO_SetState(GPIO_SYNC_SCOPE, true);
+	GPIO_SetState(GPIO_AMP_CS, false);
+	GPIO_SetState(GPIO_IG_PULSE, true);
 	
 	// Альтернативные функции
 	GPIO_InitAltFunction(GPIO_ALT_CAN_RX, AltFn_9);
