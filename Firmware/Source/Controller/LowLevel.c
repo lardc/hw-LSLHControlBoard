@@ -10,6 +10,7 @@
 volatile bool IdLowRange = FALSE;
 
 // Functions
+void LL_WriteToShuntAmpl(volatile uint8_t Data);
 //
 void LL_ToggleBoardLED()
 {
@@ -21,7 +22,16 @@ void LL_IdLowRange(bool State)
 {
 	IdLowRange = State;
 
-	LL_WriteToShuntAmpl((uint8_t)IdLowRange << 2);
+	if(State)
+	{
+		LL_WriteToShuntAmpl(2 << 1);
+	}
+	else
+	{
+		LL_WriteToShuntAmpl(0);
+	}
+
+
 }
 //------------------------------------
 
