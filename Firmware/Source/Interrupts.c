@@ -15,22 +15,6 @@ void DMA1_Channel1_IRQHandler()
 {
 	if(DMA_IsTransferComplete(DMA1, DMA_ISR_TCIF1))
 	{
-		for (uint8_t i = 0; i < VALUES_POWER_DMA_SIZE; ++i)
-		{
-			if(ADC_CHANNEL_SWAP)
-			{
-				MEMBUF_DMA_Id[i] += MEMBUF_DMA[i] >> 16;
-				MEMBUF_DMA_Vd[i] += MEMBUF_DMA[i] &  0xFFFF;
-			}
-			else
-			{
-				MEMBUF_DMA_Vd[i] += MEMBUF_DMA[i] >> 16;
-				MEMBUF_DMA_Id[i] += MEMBUF_DMA[i] &  0xFFFF;
-			}
-
-			MEMBUF_DMA[i] = 0;
-		}
-
 		DMA_TransferCompleteReset(DMA1, DMA_IFCR_CTCIF1);
 	}
 }
