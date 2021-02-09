@@ -58,22 +58,25 @@ void IO_Config()
 	RCC_GPIO_Clk_EN(PORTB);
 
 	// Выходы
-	GPIO_Config (GPIOA, Pin_1, Output, PushPull, HighSpeed, NoPull);				// PA1 - DAC_CS
-	GPIO_Bit_Rst(GPIOA, Pin_1);
-	GPIO_Config (GPIOA, Pin_2, Output, PushPull, HighSpeed, NoPull);				// PA2 - DAC_LDAC
-	GPIO_Bit_Rst(GPIOA, Pin_2);
-	GPIO_Config (GPIOA, Pin_3, Output, PushPull, HighSpeed, NoPull);				// PA1 - IFB_EN
-	GPIO_Bit_Rst(GPIOA, Pin_3);
-	GPIO_Config (GPIOA, Pin_8, Output, PushPull, HighSpeed, Pull_Up);				// PA8 - RangeSelect
-	GPIO_Bit_Set(GPIOA, Pin_8);
-	GPIO_Config (GPIOA, Pin_15, Output, PushPull, HighSpeed, NoPull);			 	// PA15 - SYNC_SCPC
+	GPIO_Config (GPIOA, Pin_4, Output, PushPull, HighSpeed, NoPull);				// PA4 - CS
+	GPIO_Bit_Rst(GPIOA, Pin_4);
+	GPIO_Config (GPIOA, Pin_5, Output, PushPull, HighSpeed, NoPull);				// PA5 - CLK
+	GPIO_Bit_Rst(GPIOA, Pin_5);
+	GPIO_Config (GPIOA, Pin_7, Output, PushPull, HighSpeed, NoPull);				// PA7 - DATA
+	GPIO_Bit_Rst(GPIOA, Pin_7);
+	GPIO_Config (GPIOA, Pin_15, Output, PushPull, HighSpeed, NoPull);				// PA15 - CHANEL
 	GPIO_Bit_Rst(GPIOA, Pin_15);
-	GPIO_Config (GPIOB, Pin_0, Output, PushPull, HighSpeed, Pull_Up);				// PB0 - GATE_EN
-	GPIO_Bit_Set(GPIOB, Pin_0);
-	GPIO_Config (GPIOB, Pin_6, Output, PushPull, HighSpeed, NoPull);				// PB6 - SYNC_OSC
-	GPIO_Bit_Rst(GPIOB, Pin_6);
-	GPIO_Config (GPIOB, Pin_7, Output, PushPull, HighSpeed, NoPull);				// PB7 - LED
-	GPIO_Bit_Rst(GPIOB, Pin_7);
+	GPIO_Config (GPIOA, Pin_8, Output, PushPull, HighSpeed, NoPull);			 	// PA8 - SYNC_SCPC
+	GPIO_Bit_Rst(GPIOA, Pin_8);
+
+	GPIO_Config (GPIOB, Pin_12, Output, PushPull, HighSpeed, NoPull);				// PB12 - LED
+	GPIO_Bit_Rst(GPIOB, Pin_12);
+	GPIO_Config (GPIOB, Pin_13, Output, PushPull, HighSpeed, NoPull);				// PB13 - DUT ENABLE
+	GPIO_Bit_Rst(GPIOB, Pin_13);
+	GPIO_Config (GPIOB, Pin_14, Output, PushPull, HighSpeed, NoPull);				// PB14 - SS
+	GPIO_Bit_Rst(GPIOB, Pin_14);
+	GPIO_Config (GPIOB, Pin_15, Output, PushPull, HighSpeed, NoPull);				// PB15 - SYNC OSC
+	GPIO_Bit_Rst(GPIOB, Pin_15);
 
 	// Альтернативные функции портов
 	GPIO_Config(GPIOA, Pin_9, AltFn, PushPull, HighSpeed, NoPull);		// PA9(USART1 TX)
