@@ -7,7 +7,7 @@
 
 //Functions
 //
-bool LOGIC_FindCells();
+void LOGIC_FindCells();
 bool LOGIC_UpdateCellsState();
 
 bool LOGIC_CallCommandForCells(uint16_t Command);

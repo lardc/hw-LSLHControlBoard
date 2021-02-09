@@ -41,7 +41,7 @@ void LOGIC_ResetCellsCurrent();
 
 // Functions
 //
-bool LOGIC_FindCells()
+void LOGIC_FindCells()
 {
 	ActiveCellsCounter = 0;
 	CachedStartNid = DataTable[REG_PC_START_NID];
@@ -60,8 +60,6 @@ bool LOGIC_FindCells()
 	
 	DataTable[REG_TOTAL_LSLPC] = ActiveCellsCounter;
 	DataTable[REG_CURRENT_MAX] = CachedCellMaxCurrent * ActiveCellsCounter;
-	
-	return ActiveCellsCounter;
 }
 // ----------------------------------------
 
@@ -276,7 +274,7 @@ void LOGIC_ProcessPulse()
 	DELAY_MS(5);
 	LL_SyncPowerCell(false);
 	LL_PulseIg(false);
-
+	
 	// Завершение оцифровки
 	TIM_Stop(TIM1);
 
