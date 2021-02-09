@@ -35,6 +35,6 @@
 #define VOLTAGE_MAX_VALUE			5000				// Максимальное измеряемое напряжение
 
 // Параметры DMA
-#define VALUES_POWER_DMA_SIZE		2000
+#define MEMBUF_DMA_SIZE				2000
 
 #endif // __GLOBAL_H

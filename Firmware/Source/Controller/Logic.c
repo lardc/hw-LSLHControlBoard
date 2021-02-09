@@ -256,7 +256,7 @@ void LOGIC_SelectCurrentRange(float Current)
 void LOGIC_ProcessPulse()
 {
 	// Подготовка оцифровки
-	DMA_ChannelReload(DMA_ADC, VALUES_POWER_DMA_SIZE * 2);
+	DMA_ChannelReload(DMA_ADC, MEMBUF_DMA_SIZE * 2);
 	DMA_ChannelEnable(DMA_ADC, true);
 
 	// Сигнал отпирания DUT
@@ -281,11 +281,11 @@ void LOGIC_ProcessPulse()
 	TIM_Stop(TIM1);
 
 	// Пересчёт значений
-	MEASURE_ConvertVd((uint16_t *)MEMBUF_DMA_Vd, VALUES_POWER_DMA_SIZE);
+	MEASURE_ConvertVd((uint16_t *)MEMBUF_Vd, MEMBUF_DMA_SIZE);
 	if(LL_IsIdLowRange())
-		MEASURE_ConvertIdLow((uint16_t *)MEMBUF_DMA_Id, VALUES_POWER_DMA_SIZE);
+		MEASURE_ConvertIdLow((uint16_t *)MEMBUF_Id, MEMBUF_DMA_SIZE);
 	else
-		MEASURE_ConvertId((uint16_t *)MEMBUF_DMA_Id, VALUES_POWER_DMA_SIZE);
+		MEASURE_ConvertId((uint16_t *)MEMBUF_Id, MEMBUF_DMA_SIZE);
 }
 // ----------------------------------------
 
@@ -306,11 +306,11 @@ void LOGIC_SaveToEndpoint(volatile Int16U *InputArray, Int16U *OutputArray, uint
 void LOGIC_SaveResults()
 {
 	if(DataTable[REG_CURRENT_OVERSHOOT])
-		DataTable[REG_DUT_VOLTAGE] = MEASURE_InstantValuesOnFallEdge((uint16_t *)MEMBUF_DMA_Vd, (uint16_t *)MEMBUF_DMA_Id, VALUES_POWER_DMA_SIZE);
+		DataTable[REG_DUT_VOLTAGE] = MEASURE_InstantValuesOnFallEdge((uint16_t *)MEMBUF_Vd, (uint16_t *)MEMBUF_Id, MEMBUF_DMA_SIZE);
 	else
-		DataTable[REG_DUT_VOLTAGE] = MEASURE_InstantValues((uint16_t *)MEMBUF_DMA_Vd, VALUES_POWER_DMA_SIZE);
+		DataTable[REG_DUT_VOLTAGE] = MEASURE_InstantValues((uint16_t *)MEMBUF_Vd, MEMBUF_DMA_SIZE);
 
-	DataTable[REG_DUT_CURRENT] = MEASURE_InstantValues((uint16_t *)MEMBUF_DMA_Id, VALUES_POWER_DMA_SIZE);
+	DataTable[REG_DUT_CURRENT] = MEASURE_InstantValues((uint16_t *)MEMBUF_Id, MEMBUF_DMA_SIZE);
 
 
 	if((DataTable[REG_DUT_VOLTAGE] > VOLTAGE_MAX_VALUE) || (DataTable[REG_DUT_VOLTAGE] < VOLTAGE_MIN_VALUE))
