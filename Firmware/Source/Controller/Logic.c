@@ -186,6 +186,11 @@ bool LOGIC_DistributeCurrent(float Current)
 	uint16_t IntCurrent = (uint16_t)Current;
 	uint16_t FractionCurrent = IntCurrent - (IntCurrent / CachedCellMaxCurrent) * CachedCellMaxCurrent;
 	
+	if(IntCurrent > DataTable[REG_CURRENT_MAX])
+	{
+		IntCurrent = DataTable[REG_CURRENT_MAX];
+	}
+	
 	// Ток превышает допустимый диапазон
 	if(IntCurrent > (CachedCellMaxCurrent * ActiveCellsCounter))
 		return false;
