@@ -122,10 +122,9 @@ void INITCFG_ConfigDMA()
 	
 	DMA_Reset(DMA_ADC);
 	DMA_Interrupt(DMA_ADC, DMA_TRANSFER_COMPLETE, 0, true);
-	DMAChannelX_DataConfig(DMA_ADC, (uint32_t)(&MEMBUF_DMA[0]), (uint32_t)(&ADC1->DR), VALUES_POWER_DMA_SIZE);
+	DMAChannelX_DataConfig(DMA_ADC, (uint32_t)(&MEMBUF_DMA[0]), (uint32_t)(&ADC1->DR), VALUES_POWER_DMA_SIZE * 2);
 	DMAChannelX_Config(DMA_ADC, DMA_MEM2MEM_DIS, DMA_LvlPriority_LOW, DMA_MSIZE_16BIT, DMA_PSIZE_16BIT,
-			DMA_MINC_EN, DMA_PINC_DIS, DMA_CIRCMODE_EN, DMA_READ_FROM_PERIPH);
-	
+			DMA_MINC_EN, DMA_PINC_DIS, DMA_CIRCMODE_DIS, DMA_READ_FROM_PERIPH);
 }
 //------------------------------------
 
