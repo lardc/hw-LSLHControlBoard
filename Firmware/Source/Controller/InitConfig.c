@@ -22,7 +22,7 @@ void INITCFG_ConfigGPIO()
 	// Включение тактирования портов
 	RCC_GPIO_Clk_EN(PORTA);
 	RCC_GPIO_Clk_EN(PORTB);
-	
+
 	// Цифровые входы
 	GPIO_InitInput(GPIO_CUR_ERR, NoPull);
 
@@ -43,7 +43,7 @@ void INITCFG_ConfigGPIO()
 	GPIO_SetState(GPIO_SYNC_SCOPE, true);
 	GPIO_SetState(GPIO_AMP_CS, false);
 	GPIO_SetState(GPIO_IG_PULSE, true);
-	
+
 	// Альтернативные функции
 	GPIO_InitAltFunction(GPIO_ALT_CAN_RX, AltFn_9);
 	GPIO_InitAltFunction(GPIO_ALT_CAN_TX, AltFn_9);
@@ -81,20 +81,19 @@ void INITCFG_ConfigADC()
 {
 	RCC_ADC_Clk_EN(ADC_12_ClkEN);
 
-	ADC1_2_SetDualMode(true);
-
 	ADC_Calibration(ADC1);
-	ADC_TrigConfig(ADC1, ADC12_TIM1_TRGO, RISE);
-	ADC_ChannelSeqReset(ADC1);
 
+	ADC_ChannelSeqReset(ADC1);
+	ADC_ChannelSeqLen(ADC1, 2);
 	ADC_ChannelSet_Sequence(ADC1, ADC1_ID_CHANNEL, 1);
 	ADC_ChannelSet_Sequence(ADC1, ADC1_VD_CHANNEL, 2);
+	ADC_ChannelSet_SampleTime(ADC1, ADC1_ID_CHANNEL, ADC_SMPL_TIME_7_5);
+	ADC_ChannelSet_SampleTime(ADC1, ADC1_VD_CHANNEL, ADC_SMPL_TIME_7_5);
 
-	ADC_ChannelSeqLen(ADC1, 2);
+	ADC_TrigConfig(ADC1, ADC12_TIM1_TRGO, RISE);
 
 	ADC_DMAConfig(ADC1);
 	ADC_Enable(ADC1);
-
 	ADC_SamplingStart(ADC1);
 }
 //------------------------------------
