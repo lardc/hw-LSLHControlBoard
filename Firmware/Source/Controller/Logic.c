@@ -184,13 +184,14 @@ bool LOGIC_DistributeCurrent(float Current)
 {
 	// Определение дробной части уставки тока
 	uint16_t IntCurrent = (uint16_t)Current;
-	uint16_t FractionCurrent = IntCurrent - (IntCurrent / CachedCellMaxCurrent) * CachedCellMaxCurrent;
+	uint16_t FractionCurrent = 0;
 	
 	if(IntCurrent > DataTable[REG_CURRENT_MAX])
-	{
 		IntCurrent = DataTable[REG_CURRENT_MAX];
-	}
 	
+
+	FractionCurrent = IntCurrent - (IntCurrent / CachedCellMaxCurrent) * CachedCellMaxCurrent;
+
 	// Ток превышает допустимый диапазон
 	if(IntCurrent > (CachedCellMaxCurrent * ActiveCellsCounter))
 		return false;
