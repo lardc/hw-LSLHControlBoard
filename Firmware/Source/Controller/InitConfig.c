@@ -37,8 +37,10 @@ void INITCFG_ConfigGPIO()
 	GPIO_InitOpenDrainOutput(GPIO_IG_PULSE, Pull_Up);
 	GPIO_InitOpenDrainOutput(GPIO_SYNC_POWER_CELL, Pull_Up);
 	GPIO_InitOpenDrainOutput(GPIO_SYNC_SCOPE, Pull_Up);
+	GPIO_InitOpenDrainOutput(GPIO_SEL_CHANEL, Pull_Up);
 
 	// Начальная установка состояний
+	GPIO_SetState(GPIO_SEL_CHANEL, true);
 	GPIO_SetState(GPIO_SYNC_POWER_CELL, true);
 	GPIO_SetState(GPIO_SYNC_SCOPE, true);
 	GPIO_SetState(GPIO_AMP_CS, false);

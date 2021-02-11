@@ -26,6 +26,7 @@ GPIO_PortPinSettingMacro GPIO_SYNC_POWER_CELL 	= {GPIOA, Pin_8};
 GPIO_PortPinSettingMacro GPIO_IG_PULSE			= {GPIOB, Pin_13};
 GPIO_PortPinSettingMacro GPIO_SYNC_SCOPE		= {GPIOB, Pin_15};
 GPIO_PortPinSettingMacro GPIO_AMP_CS			= {GPIOA, Pin_4};
+GPIO_PortPinSettingMacro GPIO_SEL_CHANEL		= {GPIOA, Pin_15};
 
 // Определения для входных портов
 GPIO_PortPinSettingMacro GPIO_CUR_ERR			= {GPIOB, Pin_6};
