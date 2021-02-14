@@ -75,7 +75,7 @@ void INITCFG_ConfigUART()
 
 void INITCFG_ConfigSPI()
 {
-	SPI_Init8b(SPI1, SPI_CR1_BR, FALSE);
+	SPI_Init8b(SPI1,  SPI_CR1_BR_1 >> 3, FALSE);
 }
 //------------------------------------
 
