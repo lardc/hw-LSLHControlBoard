@@ -81,6 +81,10 @@
 #define GATE_PULSE_DELAY_MAX	1000
 #define GATE_PULSE_DELAY_DEF	500
 
+//
+#define YES						1
+#define NO						0
+
 
 // Types
 typedef struct __TableItemConstraint
