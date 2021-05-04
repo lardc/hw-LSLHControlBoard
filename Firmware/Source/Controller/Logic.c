@@ -203,7 +203,14 @@ bool LOGIC_DistributeCurrent(float Current)
 	// Очистка уставки тока для всех ячеек
 	LOGIC_ResetCellsCurrent();
 	
-	// Запись значений тока и флага модифицированного синус сигнала
+	// Запись флага модифицированного синус сигнала
+	for(uint16_t i = 0; i < LSLPC_COUNT_MAX; ++i)
+	{
+		if(PC_DataArray[i].IsActive)
+			PC_DataArray[i].PulseMode = DataTable[REG_PULSE_MODE];
+	}
+
+	// Запись значений тока
 	for(uint16_t i = 0; (i < LSLPC_COUNT_MAX) && (IntCurrent > 0); ++i)
 	{
 		if(PC_DataArray[i].IsActive)
