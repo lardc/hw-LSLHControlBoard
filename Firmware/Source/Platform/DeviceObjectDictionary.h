@@ -54,7 +54,9 @@
 #define REG_ISET_P2						43	// Полином точной корректировки задания прямого тока P2 х1е6
 
 // Несохраняемы регистры чтения-записи
+#define REG_FOR_COMPATIBILITY_1			128	// Для совместимости
 #define REG_CURRENT_SETPOINT			140	// Уставка тока (в А)
+#define REG_FOR_COMPATIBILITY_2			141	// Для совместимости
 
 #define REG_GATE_PULSE_TIME				150	// Длительность импульса управления (в мкс)
 #define REG_VG_VALUE					151	// Напряжение цепи управления (в мВ)
@@ -63,6 +65,9 @@
 #define REG_PULSE_MODE					154	// Тип сигнала тока: 0 - sin, 1 - mod sin
 
 #define REG_DBG							160	// Отладочный регистр
+#define REG_FOR_COMPATIBILITY_3			161	// Для совместимости
+#define REG_FOR_COMPATIBILITY_4			162	// Для совместимости
+#define REG_FOR_COMPATIBILITY_5			163	// Для совместимости
 
 // Регистры только чтение
 #define REG_DEV_STATE					192	// Регистр состояния
