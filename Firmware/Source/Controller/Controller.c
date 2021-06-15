@@ -12,6 +12,7 @@
 #include "GateDriver.h"
 #include "LowLevel.h"
 #include "Measurement.h"
+#include "Delay.h"
 
 // Types
 //
@@ -80,6 +81,8 @@ void CONTROL_Init()
 	DEVPROFILE_ResetControlSection();
 	CONTROL_ResetToDefaults();
 
+	// Поиск ячеек
+	DELAY_MS(1000);
 	LOGIC_FindCells();
 }
 //-----------------------------------------------
@@ -107,6 +110,8 @@ void CONTROL_ResetData()
 	DataTable[REG_BHL_DEVICE] = 0;
 	DataTable[REG_BHL_FUNCTION] = 0;
 	DataTable[REG_BHL_EXT_DATA] = 0;
+
+	DataTable[REG_PULSE_MODE] = 0;
 
 	DEVPROFILE_ResetScopes(0);
 	DEVPROFILE_ResetEPReadState();
