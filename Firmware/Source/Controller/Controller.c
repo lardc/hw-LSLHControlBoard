@@ -327,7 +327,7 @@ void CONTROL_HandlePulse()
 					if(LOGIC_DistributeCurrent(CurrentAmplitude))
 					{
 						bool NoError = false;
-						LOGIC_SelectCurrentRange(CurrentAmplitude);
+						LOGIC_SelectCurrentRange(DataTable[REG_CURRENT_SETPOINT]);
 						
 						if(LOGIC_WriteCellsConfig())
 						{
