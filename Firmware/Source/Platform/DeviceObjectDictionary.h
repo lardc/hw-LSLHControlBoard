@@ -108,6 +108,12 @@
 #define REG_LSLPC_WARNING				195
 #define REG_LSLPC_PROBLEM				196
 // -----------------------------
+#define REG_FWINFO_SLAVE_NID			256	// Device CAN slave node ID
+#define REG_FWINFO_MASTER_NID			257	// Device CAN master node ID (if presented)
+// 258 - 259
+#define REG_FWINFO_STR_LEN				260	// Length of the information string record
+#define REG_FWINFO_STR_BEGIN			261	// Begining of the information string record
+// -----------------------------
 
 // Endpoints
 #define EP16_DATA_ID					1	// Оцифрованные данные Id
