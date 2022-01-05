@@ -88,7 +88,7 @@ void MEASURE_ConvertIg(uint16_t *InputArray, uint16_t DataLength)
 float MEASURE_ExtractMaxValues(Int16U *InputArray, Int16U Size)
 {
 	float AverageValue = 0;
-	Int16U InputArrayCopy[VALUES_POWER_DMA_SIZE];
+	static Int16U InputArrayCopy[VALUES_POWER_DMA_SIZE];
 
 	// Копирование массива
 	for (int i = 0; i < Size; i++)
@@ -136,9 +136,16 @@ Int16U MEASURE_ExtractVoltage(Int16U *VoltageArray, Int16U *CurrentArray, Int16U
 	if(Index <= (Size / 3))
 		Index = IndexMax;
 
+	DataTable[100] = AverageValue;
+
 	// Усредение в точке измерения
 	for (int i = Index; i < (Index + SAMPLING_AVG_NUM); i++)
 		AverageValue += *(VoltageArray + i);
+
+	DataTable[101] = *(VoltageArray + Index);
+	DataTable[102] = Index;
+	DataTable[103] = CurrentPoint;
+	DataTable[104] = (Int16U) (AverageValue / SAMPLING_AVG_NUM);
 
 	return (AverageValue / SAMPLING_AVG_NUM);
 }

@@ -302,6 +302,7 @@ void LOGIC_ProcessPulse()
 	LL_SyncPowerCell(false);
 
 	// Завершение оцифровки
+	while(!IT_DMASampleCompleted()){}
 	TIM_Stop(TIM1);
 	TIM_Stop(TIM2);
 
@@ -332,7 +333,7 @@ void LOGIC_SaveToEndpoint(volatile Int16U *InputArray, Int16U *OutputArray, uint
 
 void LOGIC_SaveResults()
 {
-	double Current, WholeNumber, Fraction;
+	float  Current, WholeNumber, Fraction;
 
 	DataTable[REG_GATE_VOLTAGE] = MEASURE_ExtractMaxValues((uint16_t *)MEMBUF_DMA_Vg, VALUES_GATE_DMA_SIZE);
 	DataTable[REG_GATE_CURRENT] = MEASURE_ExtractMaxValues((uint16_t *)MEMBUF_DMA_Ig, VALUES_GATE_DMA_SIZE);
@@ -342,7 +343,7 @@ void LOGIC_SaveResults()
 	if(DataTable[REG_CURRENT_OVERSHOOT])
 		Current = Current / ((float)(100 + DataTable[REG_CURRENT_OVERSHOOT]) / 100);
 
-	Fraction = modf(Current, &WholeNumber);
+	Fraction = modff(Current, &WholeNumber);
 	DataTable[REG_DUT_CURRENT] = (uint16_t) WholeNumber;
 	DataTable[REG_DUT_CURRENT_FRACTION] = (uint16_t) (Fraction * 10);
 	//
