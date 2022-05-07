@@ -8,13 +8,29 @@
 #include "Global.h"
 #include "MemBuffers.h"
 
+// Variables
+//
+static volatile bool Id_VdCompleted;
+
 // Functions
+//
+bool IT_DMASampleCompleted()
+{
+	return Id_VdCompleted;
+}
+//-----------------------------------------
+
+void IT_DMAFlagsReset()
+{
+	Id_VdCompleted = false;
+}
 //-----------------------------------------
 
 void DMA1_Channel1_IRQHandler()
 {
 	if(DMA_IsTransferComplete(DMA1, DMA_ISR_TCIF1))
 	{
+		Id_VdCompleted = true;
 		DMA_TransferCompleteReset(DMA1, DMA_IFCR_CTCIF1);
 	}
 }

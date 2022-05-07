@@ -288,6 +288,9 @@ void LOGIC_ProcessPulse()
 	// запуск синхронизации LSLPC
 	LL_SyncPowerCell(true);
 
+	// Подготовка оцифровки
+	IT_DMAFlagsReset();
+
 	// Запуск оцифровки импульса тока и напряжения в силовой цепи
 	TIM_Start(TIM1);
 
@@ -300,6 +303,7 @@ void LOGIC_ProcessPulse()
 	LL_PulseIg(false);
 
 	// Завершение оцифровки
+	while(!IT_DMASampleCompleted()){}
 	TIM_Stop(TIM1);
 
 	// Копирование из DMA в свои буферы
