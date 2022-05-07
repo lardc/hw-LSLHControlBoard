@@ -77,6 +77,7 @@
 #define REG_OP_RESULT					197	// Регистр результата операции
 
 #define REG_DUT_VOLTAGE					198	// Измеренное значение прямого напряжения (в мВ)
+#define REG_DUT_CURRENT_FRACTION		205	// Дробная часть измеренного значения тока (в А * 10)
 #define REG_DUT_CURRENT					206	// Измеренное значение прямого тока (в А)
 
 #define REG_DEV_SUB_STATE				209	// Регистр вспомогательного состояния

@@ -66,42 +66,72 @@ void MEASURE_ConvertIdLow(uint16_t *InputArray, uint16_t DataLength)
 //------------------------------------
 
 
-Int16U MEASURE_InstantValues(Int16U *InputArray, Int16U Size)
+float MEASURE_ExtractMaxValues(Int16U *InputArray, Int16U Size)
 {
-	Int32U AverageValue = 0;
+	float AverageValue = 0;
+	static Int16U InputArrayCopy[VALUES_POWER_DMA_SIZE];
 
-	qsort(InputArray, Size, sizeof(*InputArray), MEASURE_SortCondition);
-
-	for (int i = Size - SAMPLING_AVG_NUM - MAX_SAMPLES_CUTOFF_NUM; i < Size - MAX_SAMPLES_CUTOFF_NUM; ++i)
-		AverageValue += *(InputArray + i);
-
-	return (AverageValue / SAMPLING_AVG_NUM);
-}
-//------------------------------------
-
-Int16U MEASURE_InstantValuesOnFallEdge(Int16U *Voltage, Int16U *Current, Int16U Size)
-{
-	Int32U AverageValue = 0;
-	Int16U Index = 0;
-
-	qsort((Voltage + Size / 2), (Size / 2), sizeof(*Voltage), MEASURE_SortCondition);
-	qsort((Current + Size / 2), (Size / 2), sizeof(*Current), MEASURE_SortCondition);
-
-	for(int i = Size / 2; i < Size; i++)
+	// Копирование массива
+	for (int i = 0; i < Size; i++)
 	{
-		if(DataTable[REG_CURRENT_SETPOINT] <= *(Current + i))
-		{
-			Index = i;
-			break;
-		}
+		// Из-за процесса отпирания прибора 1/3 массива содержит ненужные данные, которые необходимо обнулить
+		if(i < (Size / 3))
+			InputArrayCopy[i] = 0;
+		else
+			InputArrayCopy[i] = *(InputArray + i);
 	}
 
-	for (int i = Index; i < (Index + SAMPLING_AVG_NUM); i++)
-		AverageValue += *(Voltage + i);
+	qsort(InputArrayCopy, Size, sizeof(*InputArrayCopy), MEASURE_SortCondition);
+
+	for (int i = Size - SAMPLING_AVG_NUM - MAX_SAMPLES_CUTOFF_NUM; i < Size - MAX_SAMPLES_CUTOFF_NUM; ++i)
+		AverageValue += *(InputArrayCopy + i);
 
 	return (AverageValue / SAMPLING_AVG_NUM);
 }
 //------------------------------------
+
+Int16U MEASURE_ExtractVoltage(Int16U *VoltageArray, Int16U *CurrentArray, Int16U CurrentPoint, Int16U Size)
+{
+	Int32U AverageValue = 0;
+	Int16U Index = 0, IndexMax = 0;
+	Int16U CurrentMax = 0;
+
+	// Поиск значения CurrentPoint в массиве CurrentArray
+	for(int i = (Size / 3); i < Size; i++)
+	{
+		if(CurrentMax < *(CurrentArray + i))
+		{
+			CurrentMax = *(CurrentArray + i);
+			IndexMax = i;
+		}
+
+		if(*(CurrentArray + i) <= CurrentPoint)
+		{
+			if(!Index)
+				Index = i;
+		}
+		else
+			Index = 0;
+	}
+
+	if(Index <= (Size / 3))
+		Index = IndexMax;
+
+	DataTable[100] = AverageValue;
+
+	// Усредение в точке измерения
+	for (int i = Index; i < (Index + SAMPLING_AVG_NUM); i++)
+		AverageValue += *(VoltageArray + i);
+
+	DataTable[101] = *(VoltageArray + Index);
+	DataTable[102] = Index;
+	DataTable[103] = CurrentPoint;
+	DataTable[104] = (Int16U) (AverageValue / SAMPLING_AVG_NUM);
+
+	return (AverageValue / SAMPLING_AVG_NUM);
+}
+//------------------------------------
+
 
 int MEASURE_SortCondition(const void *A, const void *B)
 {
@@ -118,12 +148,12 @@ void MEASURE_ArrayEMA(uint16_t *InputArray, uint16_t DataLength)
 
 void MEASURE_CopyFromDMA()
 {
-	for(uint16_t i = 0; i < MEMBUF_DMA_SIZE; ++i)
+	for(uint16_t i = 0; i < VALUES_POWER_DMA_SIZE; ++i)
 	{
-		MEMBUF_Id[i] = (uint16_t)(MEMBUF_DMA[i] >> 16);
-		MEMBUF_Vd[i] = (uint16_t)(MEMBUF_DMA[i] & 0xFFFF);
+		MEMBUF_DMA_Id[i] = (uint16_t)(MEMBUF_DMA[i] >> 16);
+		MEMBUF_DMA_Vd[i] = (uint16_t)(MEMBUF_DMA[i] & 0xFFFF);
 		MEMBUF_DMA[i] = 0;
 	}
 
-	MEASURE_ArrayEMA((uint16_t *)MEMBUF_Id, MEMBUF_DMA_SIZE);
+	MEASURE_ArrayEMA((uint16_t *)MEMBUF_DMA_Id, VALUES_POWER_DMA_SIZE);
 }

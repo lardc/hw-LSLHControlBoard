@@ -32,9 +32,9 @@
 
 // Предельный измеряемые значения
 #define VOLTAGE_MIN_VALUE			500				// Минимальное измеряемое напряжение
-#define VOLTAGE_MAX_VALUE			5000				// Максимальное измеряемое напряжение
+#define VOLTAGE_MAX_VALUE			5000			// Максимальное измеряемое напряжение
 
 // Параметры DMA
-#define MEMBUF_DMA_SIZE				2000
+#define VALUES_POWER_DMA_SIZE		2000
 
 #endif // __GLOBAL_H

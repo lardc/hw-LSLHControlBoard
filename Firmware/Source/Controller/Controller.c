@@ -379,8 +379,8 @@ void CONTROL_HandlePulse()
 
 void CONTROL_SaveDataToEndpoint()
 {
-	LOGIC_SaveToEndpoint((uint16_t *)MEMBUF_Vd, (uint16_t *)MEMBUF_EP_Vd, MEMBUF_DMA_SIZE);
-	LOGIC_SaveToEndpoint((uint16_t *)MEMBUF_Id, (uint16_t *)MEMBUF_EP_Id, MEMBUF_DMA_SIZE);
+	LOGIC_SaveToEndpoint((uint16_t *)MEMBUF_DMA_Vd, (uint16_t *)MEMBUF_EP_Vd, VALUES_POWER_DMA_SIZE);
+	LOGIC_SaveToEndpoint((uint16_t *)MEMBUF_DMA_Id, (uint16_t *)MEMBUF_EP_Id, VALUES_POWER_DMA_SIZE);
 
 	CONTROL_Values_Counter = VALUES_x_SIZE;
 }

@@ -20,6 +20,11 @@
 #include "ZwADC.h"
 #include "ZwTIM.h"
 #include "Global.h"
+#include "math.h"
+
+// Definitions
+//
+#define ARR_START_INDEX_SHIFT			700
 
 // Types
 //
@@ -273,7 +278,7 @@ void LOGIC_SelectCurrentRange(float Current)
 void LOGIC_ProcessPulse()
 {
 	// Подготовка оцифровки
-	DMA_ChannelReload(DMA_ADC, MEMBUF_DMA_SIZE * 2);
+	DMA_ChannelReload(DMA_ADC, VALUES_POWER_DMA_SIZE * 2);
 	DMA_ChannelEnable(DMA_ADC, true);
 
 	// Сигнал отпирания DUT
@@ -301,11 +306,11 @@ void LOGIC_ProcessPulse()
 	MEASURE_CopyFromDMA();
 
 	// Пересчёт значений
-	MEASURE_ConvertVd((uint16_t *)MEMBUF_Vd, MEMBUF_DMA_SIZE);
+	MEASURE_ConvertVd((uint16_t *)MEMBUF_DMA_Vd, VALUES_POWER_DMA_SIZE);
 	if(LL_IsIdLowRange())
-		MEASURE_ConvertIdLow((uint16_t *)MEMBUF_Id, MEMBUF_DMA_SIZE);
+		MEASURE_ConvertIdLow((uint16_t *)MEMBUF_DMA_Id, VALUES_POWER_DMA_SIZE);
 	else
-		MEASURE_ConvertId((uint16_t *)MEMBUF_Id, MEMBUF_DMA_SIZE);
+		MEASURE_ConvertId((uint16_t *)MEMBUF_DMA_Id, VALUES_POWER_DMA_SIZE);
 }
 // ----------------------------------------
 
@@ -325,13 +330,18 @@ void LOGIC_SaveToEndpoint(volatile Int16U *InputArray, Int16U *OutputArray, uint
 
 void LOGIC_SaveResults()
 {
+	float  Current, WholeNumber, Fraction;
+
+	Current = MEASURE_ExtractMaxValues((uint16_t *)MEMBUF_DMA_Id, VALUES_POWER_DMA_SIZE);
+
 	if(DataTable[REG_CURRENT_OVERSHOOT])
-		DataTable[REG_DUT_VOLTAGE] = MEASURE_InstantValuesOnFallEdge((uint16_t *)MEMBUF_Vd, (uint16_t *)MEMBUF_Id, MEMBUF_DMA_SIZE);
-	else
-		DataTable[REG_DUT_VOLTAGE] = MEASURE_InstantValues((uint16_t *)MEMBUF_Vd, MEMBUF_DMA_SIZE);
+		Current = Current / ((float)(100 + DataTable[REG_CURRENT_OVERSHOOT]) / 100);
 
-	DataTable[REG_DUT_CURRENT] = MEASURE_InstantValues((uint16_t *)MEMBUF_Id, MEMBUF_DMA_SIZE);
-
+	Fraction = modff(Current, &WholeNumber);
+	DataTable[REG_DUT_CURRENT] = (uint16_t) WholeNumber;
+	DataTable[REG_DUT_CURRENT_FRACTION] = (uint16_t) (Fraction * 10);
+	//
+	DataTable[REG_DUT_VOLTAGE] = MEASURE_ExtractVoltage((uint16_t *)MEMBUF_DMA_Vd, (uint16_t *)MEMBUF_DMA_Id, Current, VALUES_POWER_DMA_SIZE);
 
 	if((DataTable[REG_DUT_VOLTAGE] > VOLTAGE_MAX_VALUE) || (DataTable[REG_DUT_VOLTAGE] < VOLTAGE_MIN_VALUE))
 		DataTable[REG_WARNING] = WARNING_VOLTAGE_OUT_OF_RANGE;
