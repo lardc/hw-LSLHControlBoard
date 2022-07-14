@@ -180,8 +180,6 @@ static Boolean CONTROL_DispatchAction(Int16U ActionID, pInt16U pUserError)
 					CONTROL_ResetToDefaults();
 					CONTROL_SetDeviceState(DS_Ready, SS_None);
 				}
-				else
-					*pUserError = ERR_OPERATION_BLOCKED;
 			}
 			break;
 			
