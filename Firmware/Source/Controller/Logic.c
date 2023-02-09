@@ -25,6 +25,7 @@
 // Definitions
 //
 #define ARR_START_INDEX_SHIFT			700
+#define MAX_CURRENT_OVERSET				10		// Допустимое превышение по уставке тока, в %
 
 // Types
 //
@@ -193,11 +194,17 @@ bool LOGIC_SetCurrentForCertainBlock(uint16_t Nid, float Current)
 
 bool LOGIC_DistributeCurrent(float Current)
 {
-	uint16_t IntCurrent = (uint16_t)Current;
+	uint32_t IntCurrent = (uint32_t)Current;
 	
 	// Ток превышает допустимый диапазон
-	if(IntCurrent > (CachedCellMaxCurrent * ActiveCellsCounter))
-		return false;
+	uint32_t MaxTesterCurrent = (uint32_t)CachedCellMaxCurrent * ActiveCellsCounter;
+	if(IntCurrent > MaxTesterCurrent)
+	{
+		if(100L * (IntCurrent - MaxTesterCurrent) / MaxTesterCurrent >= MAX_CURRENT_OVERSET)
+			DataTable[REG_WARNING] = WARNING_CURRENT_OUT_OF_RANGE;
+
+		IntCurrent = MaxTesterCurrent;
+	}
 	
 	// Определение целой и дробной частей уставки тока
 	uint16_t FractionCurrent = IntCurrent % CachedCellMaxCurrent;
