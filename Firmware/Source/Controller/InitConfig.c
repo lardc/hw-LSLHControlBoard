@@ -8,6 +8,8 @@
 #include "MemBuffers.h"
 #include "Global.h"
 #include "LowLevel.h"
+#include "FirmwareLabel.h"
+
 // Functions
 //
 void INITCFG_ConfigSystemClock()
@@ -23,28 +25,56 @@ void INITCFG_ConfigGPIO()
 	RCC_GPIO_Clk_EN(PORTA);
 	RCC_GPIO_Clk_EN(PORTB);
 	
-	// Аналоговые входы
-	GPIO_InitAnalog(GPIO_MEASURE_IG);
-	GPIO_InitAnalog(GPIO_MEASURE_VG);
-	GPIO_InitAnalog(GPIO_MEASURE_ID);
-	GPIO_InitAnalog(GPIO_MEASURE_VD);
+	if(FWLB_GetSelector() == SID_PCB1_2_Manuf)
+	{
+		// Аналоговые входы
+		GPIO_InitAnalog(GPIO_MEASURE_IG);
+		GPIO_InitAnalog(GPIO_MEASURE_VG);
+		GPIO_InitAnalog(GPIO_MEASURE_ID);
+		GPIO_InitAnalog(GPIO_MEASURE_VD);
+
+		// Выходы
+		GPIO_InitPushPullOutput(GPIO_LED);
+		GPIO_InitPushPullOutput(GPIO_SYNC_POWER_CELL);
+		GPIO_InitPushPullOutput(GPIO_SYNC_SCOPE);
+		GPIO_InitPushPullOutput(GPIO_DAC_CS);
+		GPIO_InitPushPullOutput(GPIO_DAC_LDAC);
+
+		// Выходы с OpenDrain
+		GPIO_InitOpenDrainOutput(GPIO_IG_PULSE, NoPull);
+		LL_PulseIg(false);
+		GPIO_InitOpenDrainOutput(GPIO_ID_LOW_RANGE, NoPull);
 	
-	// Выходы
-	GPIO_InitPushPullOutput(GPIO_LED);
-	GPIO_InitPushPullOutput(GPIO_SYNC_POWER_CELL);
-	GPIO_InitPushPullOutput(GPIO_SYNC_SCOPE);
-	GPIO_InitPushPullOutput(GPIO_DAC_CS);
-	GPIO_InitPushPullOutput(GPIO_DAC_LDAC);
+		// Начальная установка состояний
+		GPIO_SetState(GPIO_DAC_CS, true);
+		GPIO_SetState(GPIO_DAC_LDAC, true);
+		GPIO_SetState(GPIO_IG_PULSE, true);
+	}
+	else if(FWLB_GetSelector() == SID_PCB2_0_SCHead)
+	{
+		// Цифровые входы
+		GPIO_InitInput(GPIO_SCH_CUR_ERR, NoPull);
 
-	// Выходы с OpenDrain
-	GPIO_InitOpenDrainOutput(GPIO_IG_PULSE, NoPull);
-	LL_PulseIg(false);
-	GPIO_InitOpenDrainOutput(GPIO_ID_LOW_RANGE, NoPull);
+		// Аналоговые входы
+		GPIO_InitAnalog(GPIO_SCH_MEASURE_ID);
+		GPIO_InitAnalog(GPIO_SCH_MEASURE_VD);
 
-	// Начальная установка состояний
-	GPIO_SetState(GPIO_DAC_CS, true);
-	GPIO_SetState(GPIO_DAC_LDAC, true);
-	GPIO_SetState(GPIO_IG_PULSE, true);
+		// Выходы
+		GPIO_InitPushPullOutput(GPIO_SCH_LED);
+		GPIO_InitPushPullOutput(GPIO_SCH_AMP_CS);
+
+		GPIO_InitOpenDrainOutput(GPIO_SCH_IG_PULSE, Pull_Up);
+		GPIO_InitOpenDrainOutput(GPIO_SCH_SYNC_POW_CELL, Pull_Up);
+		GPIO_InitOpenDrainOutput(GPIO_SCH_SYNC_SCOPE, Pull_Up);
+		GPIO_InitOpenDrainOutput(GPIO_SCH_SEL_CHANEL, Pull_Up);
+
+		// Начальная установка состояний
+		GPIO_SetState(GPIO_SCH_SEL_CHANEL, true);
+		GPIO_SetState(GPIO_SCH_SYNC_POW_CELL, true);
+		GPIO_SetState(GPIO_SCH_SYNC_SCOPE, true);
+		GPIO_SetState(GPIO_SCH_AMP_CS, false);
+		GPIO_SetState(GPIO_SCH_IG_PULSE, true);
+	}
 	
 	// Альтернативные функции
 	GPIO_InitAltFunction(GPIO_ALT_CAN_RX, AltFn_9);
@@ -87,48 +117,68 @@ void INITCFG_ConfigSPI()
 
 void INITCFG_ConfigADC()
 {
-	RCC_ADC_Clk_EN(ADC_12_ClkEN);
-	RCC_ADC_Clk_EN(ADC_34_ClkEN);
+	if(FWLB_GetSelector() == SID_PCB1_2_Manuf)
+	{
+		RCC_ADC_Clk_EN(ADC_12_ClkEN);
+		RCC_ADC_Clk_EN(ADC_34_ClkEN);
 
-	ADC1_2_SetDualMode(true);
-	ADC3_4_SetDualMode(true);
+		ADC1_2_SetDualMode(true);
+		ADC3_4_SetDualMode(true);
 
-	// ADC1
-	ADC_Calibration(ADC1);
-	ADC_TrigConfig(ADC1, ADC12_TIM2_TRGO, RISE);
-	ADC_ChannelSeqReset(ADC1);
-	ADC_ChannelSet_Sequence(ADC1, ADC1_IG_CHANNEL, 1);
-	ADC_ChannelSeqLen(ADC1, 1);
-	ADC_DMAConfig(ADC1);
-	ADC_Enable(ADC1);
+		// ADC1
+		ADC_Calibration(ADC1);
+		ADC_TrigConfig(ADC1, ADC12_TIM2_TRGO, RISE);
+		ADC_ChannelSeqReset(ADC1);
+		ADC_ChannelSet_Sequence(ADC1, ADC1_IG_CHANNEL, 1);
+		ADC_ChannelSeqLen(ADC1, 1);
+		ADC_DMAConfig(ADC1);
+		ADC_Enable(ADC1);
 
-	// ADC2
-	ADC_Calibration(ADC2);
-	ADC_ChannelSeqReset(ADC2);
-	ADC_ChannelSet_Sequence(ADC2, ADC2_VG_CHANNEL, 1);
-	ADC_ChannelSeqLen(ADC2, 1);
-	ADC_DMAConfig(ADC2);
-	ADC_Enable(ADC2);
+		// ADC2
+		ADC_Calibration(ADC2);
+		ADC_ChannelSeqReset(ADC2);
+		ADC_ChannelSet_Sequence(ADC2, ADC2_VG_CHANNEL, 1);
+		ADC_ChannelSeqLen(ADC2, 1);
+		ADC_DMAConfig(ADC2);
+		ADC_Enable(ADC2);
 
-	// ADC3
-	ADC_Calibration(ADC3);
-	ADC_TrigConfig(ADC3, ADC34_TIM1_TRGO, RISE);
-	ADC_ChannelSeqReset(ADC3);
-	ADC_ChannelSet_Sequence(ADC3, ADC3_ID_CHANNEL, 1);
-	ADC_ChannelSeqLen(ADC3, 1);
-	ADC_DMAConfig(ADC3);
-	ADC_Enable(ADC3);
+		// ADC3
+		ADC_Calibration(ADC3);
+		ADC_TrigConfig(ADC3, ADC34_TIM1_TRGO, RISE);
+		ADC_ChannelSeqReset(ADC3);
+		ADC_ChannelSet_Sequence(ADC3, ADC3_ID_CHANNEL, 1);
+		ADC_ChannelSeqLen(ADC3, 1);
+		ADC_DMAConfig(ADC3);
+		ADC_Enable(ADC3);
 
-	// ADC4
-	ADC_Calibration(ADC4);
-	ADC_ChannelSeqReset(ADC4);
-	ADC_ChannelSet_Sequence(ADC4, ADC4_VD_CHANNEL, 1);
-	ADC_ChannelSeqLen(ADC4, 1);
-	ADC_DMAConfig(ADC4);
-	ADC_Enable(ADC4);
+		// ADC4
+		ADC_Calibration(ADC4);
+		ADC_ChannelSeqReset(ADC4);
+		ADC_ChannelSet_Sequence(ADC4, ADC4_VD_CHANNEL, 1);
+		ADC_ChannelSeqLen(ADC4, 1);
+		ADC_DMAConfig(ADC4);
+		ADC_Enable(ADC4);
 
-	ADC_SamplingStart(ADC1);
-	ADC_SamplingStart(ADC3);
+		ADC_SamplingStart(ADC1);
+		ADC_SamplingStart(ADC3);
+	}
+	else if(FWLB_GetSelector() == SID_PCB2_0_SCHead)
+	{
+		RCC_ADC_Clk_EN(ADC_12_ClkEN);
+		ADC_Calibration(ADC1);
+		ADC_ChannelSeqReset(ADC1);
+
+		ADC_ChannelSeqLen(ADC1, 2);
+		ADC_ChannelSet_Sequence(ADC1, ADC1_ID_CHANNEL, 1);
+		ADC_ChannelSet_Sequence(ADC1, ADC1_VD_CHANNEL, 2);
+		ADC_ChannelSet_SampleTime(ADC1, ADC1_ID_CHANNEL, ADC_SMPL_TIME_7_5);
+		ADC_ChannelSet_SampleTime(ADC1, ADC1_VD_CHANNEL, ADC_SMPL_TIME_7_5);
+		ADC_TrigConfig(ADC1, ADC12_TIM1_TRGO, RISE);
+
+		ADC_DMAConfig(ADC1);
+		ADC_Enable(ADC1);
+		ADC_SamplingStart(ADC1);
+	}
 }
 //------------------------------------
 
@@ -169,32 +219,45 @@ void INITCFG_ConfigTimer2()
 
 void INITCFG_ConfigDMA()
 {
-	DMA_Clk_Enable(DMA1_ClkEN);
-	DMA_Clk_Enable(DMA2_ClkEN);
-	
-	DMA_Reset(DMA_ADC_IG_CHANNEL);
-	DMA_Interrupt(DMA_ADC_IG_CHANNEL, DMA_TRANSFER_COMPLETE, 0, true);
-	DMAChannelX_DataConfig(DMA_ADC_IG_CHANNEL, (uint32_t)(&MEMBUF_DMA_Ig[0]), (uint32_t)(&ADC1->DR), VALUES_GATE_DMA_SIZE);
-	DMAChannelX_Config(DMA_ADC_IG_CHANNEL, DMA_MEM2MEM_DIS, DMA_LvlPriority_LOW, DMA_MSIZE_16BIT, DMA_PSIZE_16BIT,
-			DMA_MINC_EN, DMA_PINC_DIS, DMA_CIRCMODE_DIS, DMA_READ_FROM_PERIPH);
-	
-	DMA_Reset(DMA_ADC_VG_CHANNEL);
-	DMA_Interrupt(DMA_ADC_VG_CHANNEL, DMA_TRANSFER_COMPLETE, 0, true);
-	DMAChannelX_DataConfig(DMA_ADC_VG_CHANNEL, (uint32_t)(&MEMBUF_DMA_Vg[0]), (uint32_t)(&ADC2->DR), VALUES_GATE_DMA_SIZE);
-	DMAChannelX_Config(DMA_ADC_VG_CHANNEL, DMA_MEM2MEM_DIS, DMA_LvlPriority_LOW, DMA_MSIZE_16BIT, DMA_PSIZE_16BIT,
-			DMA_MINC_EN, DMA_PINC_DIS, DMA_CIRCMODE_DIS, DMA_READ_FROM_PERIPH);
-	
-	DMA_Reset(DMA_ADC_ID_CHANNEL);
-	DMA_Interrupt(DMA_ADC_ID_CHANNEL, DMA_TRANSFER_COMPLETE, 0, true);
-	DMAChannelX_DataConfig(DMA_ADC_ID_CHANNEL, (uint32_t)(&MEMBUF_DMA_Id[0]), (uint32_t)(&ADC3->DR), VALUES_POWER_DMA_SIZE);
-	DMAChannelX_Config(DMA_ADC_ID_CHANNEL, DMA_MEM2MEM_DIS, DMA_LvlPriority_LOW, DMA_MSIZE_16BIT, DMA_PSIZE_16BIT,
-			DMA_MINC_EN, DMA_PINC_DIS, DMA_CIRCMODE_DIS, DMA_READ_FROM_PERIPH);
-	
-	DMA_Reset(DMA_ADC_VD_CHANNEL);
-	DMA_Interrupt(DMA_ADC_VD_CHANNEL, DMA_TRANSFER_COMPLETE, 0, true);
-	DMAChannelX_DataConfig(DMA_ADC_VD_CHANNEL, (uint32_t)(&MEMBUF_DMA_Vd[0]), (uint32_t)(&ADC4->DR), VALUES_POWER_DMA_SIZE);
-	DMAChannelX_Config(DMA_ADC_VD_CHANNEL, DMA_MEM2MEM_DIS, DMA_LvlPriority_LOW, DMA_MSIZE_16BIT, DMA_PSIZE_16BIT,
-			DMA_MINC_EN, DMA_PINC_DIS, DMA_CIRCMODE_DIS, DMA_READ_FROM_PERIPH);
+	if(FWLB_GetSelector() == SID_PCB1_2_Manuf)
+	{
+		DMA_Clk_Enable(DMA1_ClkEN);
+		DMA_Clk_Enable(DMA2_ClkEN);
+
+		DMA_Reset(DMA_ADC_IG_CHANNEL);
+		DMA_Interrupt(DMA_ADC_IG_CHANNEL, DMA_TRANSFER_COMPLETE, 0, true);
+		DMAChannelX_DataConfig(DMA_ADC_IG_CHANNEL, (uint32_t)(&MEMBUF_DMA_Ig[0]), (uint32_t)(&ADC1->DR), VALUES_GATE_DMA_SIZE);
+		DMAChannelX_Config(DMA_ADC_IG_CHANNEL, DMA_MEM2MEM_DIS, DMA_LvlPriority_LOW, DMA_MSIZE_16BIT, DMA_PSIZE_16BIT,
+				DMA_MINC_EN, DMA_PINC_DIS, DMA_CIRCMODE_DIS, DMA_READ_FROM_PERIPH);
+
+		DMA_Reset(DMA_ADC_VG_CHANNEL);
+		DMA_Interrupt(DMA_ADC_VG_CHANNEL, DMA_TRANSFER_COMPLETE, 0, true);
+		DMAChannelX_DataConfig(DMA_ADC_VG_CHANNEL, (uint32_t)(&MEMBUF_DMA_Vg[0]), (uint32_t)(&ADC2->DR), VALUES_GATE_DMA_SIZE);
+		DMAChannelX_Config(DMA_ADC_VG_CHANNEL, DMA_MEM2MEM_DIS, DMA_LvlPriority_LOW, DMA_MSIZE_16BIT, DMA_PSIZE_16BIT,
+				DMA_MINC_EN, DMA_PINC_DIS, DMA_CIRCMODE_DIS, DMA_READ_FROM_PERIPH);
+
+		DMA_Reset(DMA_ADC_ID_CHANNEL);
+		DMA_Interrupt(DMA_ADC_ID_CHANNEL, DMA_TRANSFER_COMPLETE, 0, true);
+		DMAChannelX_DataConfig(DMA_ADC_ID_CHANNEL, (uint32_t)(&MEMBUF_DMA_Id[0]), (uint32_t)(&ADC3->DR), VALUES_POWER_DMA_SIZE);
+		DMAChannelX_Config(DMA_ADC_ID_CHANNEL, DMA_MEM2MEM_DIS, DMA_LvlPriority_LOW, DMA_MSIZE_16BIT, DMA_PSIZE_16BIT,
+				DMA_MINC_EN, DMA_PINC_DIS, DMA_CIRCMODE_DIS, DMA_READ_FROM_PERIPH);
+
+		DMA_Reset(DMA_ADC_VD_CHANNEL);
+		DMA_Interrupt(DMA_ADC_VD_CHANNEL, DMA_TRANSFER_COMPLETE, 0, true);
+		DMAChannelX_DataConfig(DMA_ADC_VD_CHANNEL, (uint32_t)(&MEMBUF_DMA_Vd[0]), (uint32_t)(&ADC4->DR), VALUES_POWER_DMA_SIZE);
+		DMAChannelX_Config(DMA_ADC_VD_CHANNEL, DMA_MEM2MEM_DIS, DMA_LvlPriority_LOW, DMA_MSIZE_16BIT, DMA_PSIZE_16BIT,
+				DMA_MINC_EN, DMA_PINC_DIS, DMA_CIRCMODE_DIS, DMA_READ_FROM_PERIPH);
+	}
+	else if(FWLB_GetSelector() == SID_PCB2_0_SCHead)
+	{
+		DMA_Clk_Enable(DMA1_ClkEN);
+
+		DMA_Reset(DMA_ADC);
+		DMA_Interrupt(DMA_ADC, DMA_TRANSFER_COMPLETE, 0, true);
+		DMAChannelX_DataConfig(DMA_ADC, (uint32_t)(&MEMBUF_DMA[0]), (uint32_t)(&ADC1->DR), VALUES_POWER_DMA_SIZE * 2);
+		DMAChannelX_Config(DMA_ADC, DMA_MEM2MEM_DIS, DMA_LvlPriority_LOW, DMA_MSIZE_16BIT, DMA_PSIZE_16BIT,
+				DMA_MINC_EN, DMA_PINC_DIS, DMA_CIRCMODE_DIS, DMA_READ_FROM_PERIPH);
+	}
 }
 //------------------------------------
 

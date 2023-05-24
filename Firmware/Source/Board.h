@@ -22,7 +22,7 @@ GPIO_PortPinSettingMacro GPIO_MEASURE_VG 		= {GPIOA, Pin_4};
 GPIO_PortPinSettingMacro GPIO_MEASURE_ID 		= {GPIOB, Pin_1};
 GPIO_PortPinSettingMacro GPIO_MEASURE_VD 		= {GPIOB, Pin_12};
 
-// Определения для выходных портов
+// Определения для IO портов
 GPIO_PortPinSettingMacro GPIO_LED 				= {GPIOB, Pin_7};
 GPIO_PortPinSettingMacro GPIO_ID_LOW_RANGE	 	= {GPIOA, Pin_8};
 GPIO_PortPinSettingMacro GPIO_SYNC_POWER_CELL 	= {GPIOA, Pin_15};
@@ -38,5 +38,20 @@ GPIO_PortPinSettingMacro GPIO_ALT_UART_RX 		= {GPIOA, Pin_10};
 GPIO_PortPinSettingMacro GPIO_ALT_UART_TX 		= {GPIOA, Pin_9};
 GPIO_PortPinSettingMacro GPIO_ALT_SPI1_CLK 		= {GPIOA, Pin_5};
 GPIO_PortPinSettingMacro GPIO_ALT_SPI1_MOSI 	= {GPIOA, Pin_7};
+
+// Специфические параметры портов для SCHead v.2.0
+// Определения для аналоговых портов
+GPIO_PortPinSettingMacro GPIO_SCH_MEASURE_ID 	= {GPIOA, Pin_3};
+GPIO_PortPinSettingMacro GPIO_SCH_MEASURE_VD 	= {GPIOA, Pin_2};
+
+// Определения для выходных портов
+GPIO_PortPinSettingMacro GPIO_SCH_LED 			= {GPIOB, Pin_12};
+GPIO_PortPinSettingMacro GPIO_SCH_SYNC_POW_CELL = {GPIOA, Pin_8};
+GPIO_PortPinSettingMacro GPIO_SCH_IG_PULSE		= {GPIOB, Pin_13};
+GPIO_PortPinSettingMacro GPIO_SCH_SYNC_SCOPE	= {GPIOB, Pin_15};
+GPIO_PortPinSettingMacro GPIO_SCH_AMP_CS		= {GPIOA, Pin_4};
+GPIO_PortPinSettingMacro GPIO_SCH_SEL_CHANEL	= {GPIOA, Pin_15};
+GPIO_PortPinSettingMacro GPIO_SCH_CUR_ERR		= {GPIOB, Pin_6};
+//-------------------------------
 
 #endif // __BOARD_H
