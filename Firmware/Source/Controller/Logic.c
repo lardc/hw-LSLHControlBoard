@@ -21,6 +21,7 @@
 #include "ZwTIM.h"
 #include "Global.h"
 #include "math.h"
+#include "FirmwareLabel.h"
 
 // Definitions
 //
@@ -330,12 +331,17 @@ void LOGIC_ProcessPulse()
 
 	LL_SyncPowerCell(false);
 
+	// Копирование значений для совместимости
+	if(FWLB_GetSelector() == SID_PCB2_0_SCHead)
+		MEASURE_CopyFromDMA((uint32_t *)MEMBUF_DMA, (uint16_t *)MEMBUF_DMA_Id, (uint16_t *)MEMBUF_DMA_Vd);
+
 	// Пересчёт значений
 	MEASURE_ConvertVd((uint16_t *)MEMBUF_DMA_Vd, VALUES_POWER_DMA_SIZE);
 	if(LL_IsIdLowRange())
 		MEASURE_ConvertIdLow((uint16_t *)MEMBUF_DMA_Id, VALUES_POWER_DMA_SIZE);
 	else
 		MEASURE_ConvertId((uint16_t *)MEMBUF_DMA_Id, VALUES_POWER_DMA_SIZE);
+
 	MEASURE_ConvertVg((uint16_t *)MEMBUF_DMA_Vg, VALUES_GATE_DMA_SIZE);
 	MEASURE_ConvertIg((uint16_t *)MEMBUF_DMA_Ig, VALUES_GATE_DMA_SIZE);
 }

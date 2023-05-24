@@ -154,11 +154,22 @@ int MEASURE_SortCondition(const void *A, const void *B)
 {
 	return (int)(*(uint16_t *)A) - (int)(*(uint16_t *)B);
 }
-//-----------------------------------------
+//------------------------------------
 
 void MEASURE_ArrayEMA(uint16_t *InputArray, uint16_t DataLength)
 {
 	for(uint16_t i = 1; i < DataLength; ++i)
 		InputArray[i] = (uint16_t)(InputArray[i] * ADC_EMA_FACTOR + (1 - ADC_EMA_FACTOR) * InputArray[i - 1]);
+}
+//------------------------------------
+
+void MEASURE_CopyFromDMA(uint32_t *Source, uint16_t *Current, uint16_t *Voltage)
+{
+	for(uint16_t i = 0; i < VALUES_POWER_DMA_SIZE; ++i)
+	{
+		Current[i] = (uint16_t)(Source[i] >> 16);
+		Voltage[i] = (uint16_t)(Source[i] & 0xFFFF);
+		Source[i] = 0;
+	}
 }
 //------------------------------------

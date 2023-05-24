@@ -1,6 +1,7 @@
 ﻿#include "InitConfig.h"
 #include "Controller.h"
 #include "SysConfig.h"
+#include "FirmwareLabel.h"
 
 int main()
 {
@@ -10,6 +11,7 @@ int main()
 	
 	// Настройка аппаратной периферии
 	INITCFG_ConfigSystemClock();
+	FWLB_LoadBoardLabel();
 	INITCFG_ConfigGPIO();
 	INITCFG_ConfigCAN();
 	INITCFG_ConfigUART();
@@ -17,8 +19,11 @@ int main()
 	INITCFG_ConfigADC();
 	INITCFG_ConfigTimer3();
 	INITCFG_ConfigTimer1();
-	INITCFG_ConfigTimer2();
-	INITCFG_ConfigTimer6();
+	if(FWLB_GetSelector() == SID_PCB1_2_Manuf)
+	{
+		INITCFG_ConfigTimer2();
+		INITCFG_ConfigTimer6();
+	}
 	INITCFG_ConfigDMA();
 	INITCFG_ConfigWatchDog();
 	

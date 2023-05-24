@@ -9,10 +9,11 @@
 #include "DataTable.h"
 #include "Measurement.h"
 #include "MemBuffers.h"
+#include "FirmwareLabel.h"
 
 // Variables
 //
-static volatile bool IgCompleted, VgCompleted, IdCompleted, VdCompleted;
+static volatile bool IdVdCompleted, IgCompleted, VgCompleted, IdCompleted, VdCompleted;
 
 // Functions
 //
@@ -52,13 +53,14 @@ void TIM6_DAC_IRQHandler()
 
 bool IT_DMASampleCompleted()
 {
-	return IgCompleted && VgCompleted && IdCompleted && VdCompleted;
+	return (FWLB_GetSelector() == SID_PCB1_2_Manuf) ?
+			IgCompleted && VgCompleted && IdCompleted && VdCompleted : IdVdCompleted;
 }
 //-----------------------------------------
 
 void IT_DMAFlagsReset()
 {
-	IgCompleted = VgCompleted = IdCompleted = VdCompleted = false;
+	IdVdCompleted = IgCompleted = VgCompleted = IdCompleted = VdCompleted = false;
 }
 //-----------------------------------------
 
@@ -67,7 +69,7 @@ void DMA1_Channel1_IRQHandler()
 	// Ig
 	if(DMA_IsTransferComplete(DMA1, DMA_ISR_TCIF1))
 	{
-		IgCompleted = true;
+		IdVdCompleted = IgCompleted = true;
 		DMA_TransferCompleteReset(DMA1, DMA_IFCR_CTCIF1);
 	}
 }

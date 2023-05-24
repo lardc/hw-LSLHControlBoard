@@ -16,5 +16,6 @@ float MEASURE_ExtractMaxValues(Int16U *InputArray, Int16U Size);
 Int16U MEASURE_ExtractVoltage(Int16U *VoltageArray, Int16U *CurrentArray, Int16U CurrentPoint, Int16U Size);
 //
 void MEASURE_ArrayEMA(uint16_t *InputArray, uint16_t DataLength);
+void MEASURE_CopyFromDMA(uint32_t *Source, uint16_t *Current, uint16_t *Voltage);
 
 #endif // __MEASUREMENT_H

@@ -31,6 +31,9 @@
 // ---------------------------------------------
 
 // DMA
+// Параметры для ЭМ SCHead v.2.0
+#define DMA_ADC							DMA1_Channel1	// Канал DMA для АЦП для ЭМ SCHead v.2.0
+// -----------------------
 #define DMA_ADC_IG_CHANNEL				DMA1_Channel1	// Канал DMA для АЦП Ig
 #define DMA_ADC_VG_CHANNEL				DMA2_Channel1	// Канал DMA для АЦП Vg
 #define DMA_ADC_ID_CHANNEL				DMA2_Channel5	// Канал DMA для АЦП Id
@@ -38,6 +41,10 @@
 // ---------------------------------------------
 
 // ADC
+// Параметры для ЭМ SCHead v.2.0
+#define ADC1_ID_CHANNEL					4			// АЦП1_4 номер канала измерения Id
+#define ADC1_VD_CHANNEL					3			// АЦП1_3 номер канала измерения Vd
+// -----------------------
 #define ADC1_IG_CHANNEL					1			// АЦП1 номер канала измерения Ig
 #define ADC2_VG_CHANNEL					1			// АЦП2 номер канала измерения Vg
 #define ADC3_ID_CHANNEL					1			// АЦП3 номер канала измерения Id
