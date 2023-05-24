@@ -60,7 +60,7 @@ static void DEVPROFILE_FillWRPartDefault();
 
 // Functions
 //
-void DEVPROFILE_Init(xCCI_FUNC_CallbackAction SpecializedDispatch, Boolean* MaskChanges)
+void DEVPROFILE_Init(xCCI_FUNC_CallbackAction SpecializedDispatch, Boolean* MaskChanges, Int16U NodeID)
 {
 	// Save values
 	ControllerDispatchFunction = SpecializedDispatch;
@@ -91,9 +91,10 @@ void DEVPROFILE_Init(xCCI_FUNC_CallbackAction SpecializedDispatch, Boolean* Mask
 	// Init interface driver
 	SCCI_Init(&DEVICE_RS232_Interface, &RS232_IOConfig, &X_ServiceConfig, (pInt16U)DataTable,
 			  DATA_TABLE_SIZE, SCCI_TIMEOUT_TICKS, &RS232_EPState);
-	BCCI_Init(&DEVICE_CAN_Interface, &CAN_IOConfig, &X_ServiceConfig, (pInt16U)DataTable,
-			  DATA_TABLE_SIZE, &CAN_EPState);
-	BCCIM_Init(&MASTER_DEVICE_CAN_Interface, &CAN_Master_IOConfig, BCCIM_TIMEOUT_TICKS, &CONTROL_TimeCounter);
+	BCCI_InitWithNodeID(&DEVICE_CAN_Interface, &CAN_IOConfig, &X_ServiceConfig, (pInt16U)DataTable, DATA_TABLE_SIZE,
+			&CAN_EPState, NodeID);
+	BCCIM_InitWithNodeID(&MASTER_DEVICE_CAN_Interface, &CAN_Master_IOConfig, BCCIM_TIMEOUT_TICKS, &CONTROL_TimeCounter,
+			NodeID);
 	BHL_Init(&MASTER_DEVICE_CAN_Interface);
 
 	// Set write protection

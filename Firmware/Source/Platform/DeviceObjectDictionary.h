@@ -61,6 +61,7 @@
 #define REG_VG_P1						25	// Полином точной корректировки Vg P1 x1000
 #define REG_VG_P2						26	// Полином точной корректировки Vg P2 x1e6
 
+#define REG_ALTER_CAN_NODE_ID			30	// Регистр переопределения CAN NodeID
 #define REG_PC_MAX_CURRENT				31	// Максимальный ток с одной силовой ячейки (в А)
 #define REG_PC_START_NID				32	// Стартовое значение NodeID для первой силовой ячейки
 #define REG_PC_LONG_TIMEOUT				33	// Длинный таймаут по операциям с ячейками (в мс)

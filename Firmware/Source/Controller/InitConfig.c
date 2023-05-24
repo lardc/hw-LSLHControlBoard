@@ -61,8 +61,13 @@ void INITCFG_ConfigCAN()
 	RCC_CAN_Clk_EN(CAN_1_ClkEN);
 	NCAN_Init(SYSCLK, CAN_BAUDRATE, false);
 	NCAN_FIFOInterrupt(true);
-	NCAN_FilterInit(0, CAN_SLAVE_FILTER_ID, CAN_SLAVE_NID_MASK);
-	NCAN_FilterInit(1, CAN_MASTER_FILTER_ID, CAN_MASTER_NID_MASK);
+}
+//------------------------------------
+
+void INITCFG_ConfigCANFilters(Int16U NodeID)
+{
+	NCAN_FilterInit(0, (Int32U)NodeID << CAN_SLAVE_NID_MPY, CAN_SLAVE_NID_MASK);
+	NCAN_FilterInit(1, (Int32U)NodeID << CAN_MASTER_NID_MPY, CAN_MASTER_NID_MASK);
 }
 //------------------------------------
 

@@ -12,6 +12,7 @@
 #include "GateDriver.h"
 #include "LowLevel.h"
 #include "BCCIxParams.h"
+#include "InitConfig.h"
 
 // Types
 //
@@ -70,12 +71,16 @@ void CONTROL_Init()
 	// Конфигурация сервиса работы Data-table и EPROM
 	EPROMServiceConfig EPROMService = {(FUNC_EPROM_WriteValues)&NFLASH_WriteDT, (FUNC_EPROM_ReadValues)&NFLASH_ReadDT};
 	
+	// Определение используемого CAN NodeID
+	Int16U NodeID = (DataTable[REG_ALTER_CAN_NODE_ID] == 0) ? CAN_NID : DataTable[REG_ALTER_CAN_NODE_ID];
+	INITCFG_ConfigCANFilters(NodeID);
+
 	// Инициализация data table
 	DT_Init(EPROMService, false);
-	DT_SaveFirmwareInfo(CAN_SLAVE_NID, CAN_MASTER_NID);
+	DT_SaveFirmwareInfo(NodeID);
 	
 	// Инициализация device profile
-	DEVPROFILE_Init(&CONTROL_DispatchAction, &CycleActive);
+	DEVPROFILE_Init(&CONTROL_DispatchAction, &CycleActive, NodeID);
 	DEVPROFILE_InitEPService(EPIndexes, EPSized, EPCounters, EPDatas);
 	
 	// Сброс значений
