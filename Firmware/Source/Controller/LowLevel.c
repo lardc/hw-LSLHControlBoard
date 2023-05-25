@@ -9,8 +9,12 @@
 // Definitions
 #define DAC_CHANNEL_B		BIT15
 
+// Variables
+static bool IdLowRange = false;
+
 // Forward functions
 void LL_WriteDACx(uint16_t Data);
+void LL_WriteToShuntAmpl(uint8_t Data);
 
 // Functions
 //
@@ -22,13 +26,24 @@ void LL_ToggleBoardLED()
 
 void LL_IdLowRange(bool State)
 {
-	GPIO_SetState(GPIO_ID_LOW_RANGE, !State);
+	if(FWLB_GetSelector() == SID_PCB1_2_Manuf)
+		GPIO_SetState(GPIO_ID_LOW_RANGE, !State);
+	else if(FWLB_GetSelector() == SID_PCB2_0_SCHead)
+	{
+		IdLowRange = State;
+		LL_WriteToShuntAmpl(State ? 0x4 : 0x0);
+	}
 }
 //------------------------------------
 
 bool LL_IsIdLowRange()
 {
-	return !GPIO_GetState(GPIO_ID_LOW_RANGE);
+	if(FWLB_GetSelector() == SID_PCB1_2_Manuf)
+		return !GPIO_GetState(GPIO_ID_LOW_RANGE);
+	else if(FWLB_GetSelector() == SID_PCB2_0_SCHead)
+		return IdLowRange;
+	else
+		return false;
 }
 //------------------------------------
 
@@ -47,6 +62,17 @@ void LL_SyncScope(bool State)
 bool LL_SyncScopeGetState()
 {
 	return GPIO_GetState(GPIO_SYNC_SCOPE);
+}
+//------------------------------------
+
+void LL_WriteToShuntAmpl(uint8_t Data)
+{
+	SPI_WriteByte(SPI1, Data);
+	DELAY_US(1);
+	GPIO_SetState(GPIO_SCH_AMP_CS, true);
+	DELAY_US(1);
+	GPIO_SetState(GPIO_SCH_AMP_CS, false);
+	DELAY_US(1);
 }
 //------------------------------------
 
