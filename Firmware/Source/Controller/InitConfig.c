@@ -53,9 +53,6 @@ void INITCFG_ConfigGPIO()
 	}
 	else if(FWLB_GetSelector() == SID_PCB2_0_SCHead)
 	{
-		// Цифровые входы
-		GPIO_InitInput(GPIO_SCH_CUR_ERR, NoPull);
-
 		// Аналоговые входы
 		GPIO_InitAnalog(GPIO_SCH_MEASURE_ID);
 		GPIO_InitAnalog(GPIO_SCH_MEASURE_VD);
@@ -67,10 +64,8 @@ void INITCFG_ConfigGPIO()
 		GPIO_InitOpenDrainOutput(GPIO_SCH_IG_PULSE, Pull_Up);
 		GPIO_InitOpenDrainOutput(GPIO_SCH_SYNC_POW_CELL, Pull_Up);
 		GPIO_InitOpenDrainOutput(GPIO_SCH_SYNC_SCOPE, Pull_Up);
-		GPIO_InitOpenDrainOutput(GPIO_SCH_SEL_CHANEL, Pull_Up);
 
 		// Начальная установка состояний
-		GPIO_SetState(GPIO_SCH_SEL_CHANEL, true);
 		GPIO_SetState(GPIO_SCH_SYNC_POW_CELL, true);
 		GPIO_SetState(GPIO_SCH_SYNC_SCOPE, true);
 		GPIO_SetState(GPIO_SCH_AMP_CS, false);

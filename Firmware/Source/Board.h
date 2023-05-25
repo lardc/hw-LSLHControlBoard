@@ -50,8 +50,6 @@ GPIO_PortPinSettingMacro GPIO_SCH_SYNC_POW_CELL = {GPIOA, Pin_8};
 GPIO_PortPinSettingMacro GPIO_SCH_IG_PULSE		= {GPIOB, Pin_13};
 GPIO_PortPinSettingMacro GPIO_SCH_SYNC_SCOPE	= {GPIOB, Pin_15};
 GPIO_PortPinSettingMacro GPIO_SCH_AMP_CS		= {GPIOA, Pin_4};
-GPIO_PortPinSettingMacro GPIO_SCH_SEL_CHANEL	= {GPIOA, Pin_15};
-GPIO_PortPinSettingMacro GPIO_SCH_CUR_ERR		= {GPIOB, Pin_6};
 //-------------------------------
 
 #endif // __BOARD_H
