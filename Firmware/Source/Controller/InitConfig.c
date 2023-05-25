@@ -8,6 +8,7 @@
 #include "MemBuffers.h"
 #include "Global.h"
 #include "LowLevel.h"
+#include "GateDriver.h"
 #include "FirmwareLabel.h"
 
 // Functions
@@ -42,7 +43,7 @@ void INITCFG_ConfigGPIO()
 
 		// Выходы с OpenDrain
 		GPIO_InitOpenDrainOutput(GPIO_IG_PULSE, NoPull);
-		LL_PulseIg(false);
+		GATE_PulseOutput(false);
 		GPIO_InitOpenDrainOutput(GPIO_ID_LOW_RANGE, NoPull);
 	
 		// Начальная установка состояний

@@ -4,6 +4,7 @@
 // Include
 #include "Board.h"
 #include "Delay.h"
+#include "FirmwareLabel.h"
 
 // Definitions
 #define DAC_CHANNEL_B		BIT15
@@ -15,7 +16,7 @@ void LL_WriteDACx(uint16_t Data);
 //
 void LL_ToggleBoardLED()
 {
-	GPIO_Toggle(GPIO_LED);
+	GPIO_Toggle((FWLB_GetSelector() == SID_PCB1_2_Manuf) ? GPIO_LED : GPIO_SCH_LED);
 }
 //------------------------------------
 
@@ -46,12 +47,6 @@ void LL_SyncScope(bool State)
 bool LL_SyncScopeGetState()
 {
 	return GPIO_GetState(GPIO_SYNC_SCOPE);
-}
-//------------------------------------
-
-void LL_PulseIg(bool State)
-{
-	GPIO_SetState(GPIO_IG_PULSE, !State);
 }
 //------------------------------------
 

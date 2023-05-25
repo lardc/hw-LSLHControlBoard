@@ -13,6 +13,7 @@
 #include "LowLevel.h"
 #include "BCCIxParams.h"
 #include "InitConfig.h"
+#include "FirmwareLabel.h"
 
 // Types
 //
@@ -381,8 +382,11 @@ void CONTROL_SaveDataToEndpoint()
 {
 	LOGIC_SaveToEndpoint((uint16_t *)MEMBUF_DMA_Vd, (uint16_t *)MEMBUF_EP_Vd, VALUES_POWER_DMA_SIZE);
 	LOGIC_SaveToEndpoint((uint16_t *)MEMBUF_DMA_Id, (uint16_t *)MEMBUF_EP_Id, VALUES_POWER_DMA_SIZE);
-	LOGIC_SaveToEndpoint((uint16_t *)MEMBUF_DMA_Vg, (uint16_t *)MEMBUF_EP_Vg, VALUES_GATE_DMA_SIZE);
-	LOGIC_SaveToEndpoint((uint16_t *)MEMBUF_DMA_Ig, (uint16_t *)MEMBUF_EP_Ig, VALUES_GATE_DMA_SIZE);
+	if(FWLB_GetSelector() == SID_PCB1_2_Manuf)
+	{
+		LOGIC_SaveToEndpoint((uint16_t *)MEMBUF_DMA_Vg, (uint16_t *)MEMBUF_EP_Vg, VALUES_GATE_DMA_SIZE);
+		LOGIC_SaveToEndpoint((uint16_t *)MEMBUF_DMA_Ig, (uint16_t *)MEMBUF_EP_Ig, VALUES_GATE_DMA_SIZE);
+	}
 	CONTROL_Values_Counter = VALUES_x_SIZE;
 }
 //-----------------------------------------------
