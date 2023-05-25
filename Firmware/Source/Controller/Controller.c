@@ -110,6 +110,9 @@ void CONTROL_ResetData()
 
 	DataTable[REG_DUT_VOLTAGE] = 0;
 	DataTable[REG_DUT_CURRENT] = 0;
+	DataTable[REG_DUT_CURRENT_FRACTION] = 0;
+	DataTable[REG_GATE_VOLTAGE] = 0;
+	DataTable[REG_GATE_CURRENT] = 0;
 
 	DataTable[REG_BHL_ERROR_CODE] = 0;
 	DataTable[REG_BHL_DEVICE] = 0;

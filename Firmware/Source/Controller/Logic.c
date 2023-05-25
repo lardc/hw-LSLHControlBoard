@@ -287,14 +287,22 @@ void LOGIC_ProcessPulse()
 
 	// Подготовка оцифровки
 	IT_DMAFlagsReset();
-	DMA_ChannelReload(DMA_ADC_IG_CHANNEL, VALUES_GATE_DMA_SIZE);
-	DMA_ChannelReload(DMA_ADC_VG_CHANNEL, VALUES_GATE_DMA_SIZE);
-	DMA_ChannelReload(DMA_ADC_ID_CHANNEL, VALUES_POWER_DMA_SIZE);
-	DMA_ChannelReload(DMA_ADC_VD_CHANNEL, VALUES_POWER_DMA_SIZE);
-	DMA_ChannelEnable(DMA_ADC_IG_CHANNEL, true);
-	DMA_ChannelEnable(DMA_ADC_VG_CHANNEL, true);
-	DMA_ChannelEnable(DMA_ADC_ID_CHANNEL, true);
-	DMA_ChannelEnable(DMA_ADC_VD_CHANNEL, true);
+	if(FWLB_GetSelector() == SID_PCB1_2_Manuf)
+	{
+		DMA_ChannelReload(DMA_ADC_IG_CHANNEL, VALUES_GATE_DMA_SIZE);
+		DMA_ChannelReload(DMA_ADC_VG_CHANNEL, VALUES_GATE_DMA_SIZE);
+		DMA_ChannelReload(DMA_ADC_ID_CHANNEL, VALUES_POWER_DMA_SIZE);
+		DMA_ChannelReload(DMA_ADC_VD_CHANNEL, VALUES_POWER_DMA_SIZE);
+		DMA_ChannelEnable(DMA_ADC_IG_CHANNEL, true);
+		DMA_ChannelEnable(DMA_ADC_VG_CHANNEL, true);
+		DMA_ChannelEnable(DMA_ADC_ID_CHANNEL, true);
+		DMA_ChannelEnable(DMA_ADC_VD_CHANNEL, true);
+	}
+	else if(FWLB_GetSelector() == SID_PCB2_0_SCHead)
+	{
+		DMA_ChannelReload(DMA_ADC, VALUES_POWER_DMA_SIZE * 2);
+		DMA_ChannelEnable(DMA_ADC, true);
+	}
 
 	// Запуск оцифровки импульса тока и напряжения в силовой цепи
 	TIM_Start(TIM1);
@@ -308,7 +316,8 @@ void LOGIC_ProcessPulse()
 		DELAY_US(GatePulseDelay);
 
 	// Запуск оцифровки импульса тока и напряжения в цепи управления
-	TIM_Start(TIM2);
+	if(FWLB_GetSelector() == SID_PCB1_2_Manuf)
+		TIM_Start(TIM2);
 
 	// Сигнал отпирания DUT
 	GATE_IgPulse(DataTable[REG_IG_VALUE], GatePulseTime);
@@ -319,16 +328,18 @@ void LOGIC_ProcessPulse()
 	// Синхронизация осциллографа, если не задано превышение уставки
 	if(!DataTable[REG_CURRENT_OVERSHOOT])
 		LL_SyncScope(false);
-	else
+	else if(FWLB_GetSelector() == SID_PCB1_2_Manuf)
 		TIM_Start(TIM6);	// Запуск таймера определения момента синхронизации
 
 	// Завершение оцифровки
-	while(!IT_DMASampleCompleted()){}
+	while(!IT_DMASampleCompleted());
 
 	TIM_Stop(TIM1);
-	TIM_Stop(TIM2);
-	TIM_Stop(TIM6);
-
+	if(FWLB_GetSelector() == SID_PCB1_2_Manuf)
+	{
+		TIM_Stop(TIM2);
+		TIM_Stop(TIM6);
+	}
 	LL_SyncPowerCell(false);
 
 	// Копирование значений для совместимости
@@ -342,8 +353,11 @@ void LOGIC_ProcessPulse()
 	else
 		MEASURE_ConvertId((uint16_t *)MEMBUF_DMA_Id, VALUES_POWER_DMA_SIZE);
 
-	MEASURE_ConvertVg((uint16_t *)MEMBUF_DMA_Vg, VALUES_GATE_DMA_SIZE);
-	MEASURE_ConvertIg((uint16_t *)MEMBUF_DMA_Ig, VALUES_GATE_DMA_SIZE);
+	if(FWLB_GetSelector() == SID_PCB1_2_Manuf)
+	{
+		MEASURE_ConvertVg((uint16_t *)MEMBUF_DMA_Vg, VALUES_GATE_DMA_SIZE);
+		MEASURE_ConvertIg((uint16_t *)MEMBUF_DMA_Ig, VALUES_GATE_DMA_SIZE);
+	}
 }
 // ----------------------------------------
 
@@ -363,19 +377,20 @@ void LOGIC_SaveToEndpoint(volatile Int16U *InputArray, Int16U *OutputArray, uint
 
 void LOGIC_SaveResults()
 {
-	float Current, WholeNumber, Fraction;
+	if(FWLB_GetSelector() == SID_PCB1_2_Manuf)
+	{
+		DataTable[REG_GATE_VOLTAGE] = MEASURE_ExtractMaxValues((uint16_t *)MEMBUF_DMA_Vg, VALUES_GATE_DMA_SIZE);
+		DataTable[REG_GATE_CURRENT] = MEASURE_ExtractMaxValues((uint16_t *)MEMBUF_DMA_Ig, VALUES_GATE_DMA_SIZE);
+	}
 
-	DataTable[REG_GATE_VOLTAGE] = MEASURE_ExtractMaxValues((uint16_t *)MEMBUF_DMA_Vg, VALUES_GATE_DMA_SIZE);
-	DataTable[REG_GATE_CURRENT] = MEASURE_ExtractMaxValues((uint16_t *)MEMBUF_DMA_Ig, VALUES_GATE_DMA_SIZE);
-	//
-	Current = MEASURE_ExtractMaxValues((uint16_t *)MEMBUF_DMA_Id, VALUES_POWER_DMA_SIZE);
-
+	float Current = MEASURE_ExtractMaxValues((uint16_t *)MEMBUF_DMA_Id, VALUES_POWER_DMA_SIZE);
 	if(DataTable[REG_CURRENT_OVERSHOOT])
 		Current = Current / ((float)(100 + DataTable[REG_CURRENT_OVERSHOOT]) / 100);
 
-	Fraction = modff(Current, &WholeNumber);
-	DataTable[REG_DUT_CURRENT] = (uint16_t) WholeNumber;
-	DataTable[REG_DUT_CURRENT_FRACTION] = (uint16_t) (Fraction * 10);
+	float WholeNumber = 0;
+	float Fraction = modff(Current, &WholeNumber);
+	DataTable[REG_DUT_CURRENT] = (uint16_t)WholeNumber;
+	DataTable[REG_DUT_CURRENT_FRACTION] = (uint16_t)(Fraction * 10);
 	//
 	DataTable[REG_DUT_VOLTAGE] = MEASURE_ExtractVoltage((uint16_t *)MEMBUF_DMA_Vd, (uint16_t *)MEMBUF_DMA_Id, Current, VALUES_POWER_DMA_SIZE);
 
