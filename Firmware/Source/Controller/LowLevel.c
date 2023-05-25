@@ -49,19 +49,22 @@ bool LL_IsIdLowRange()
 
 void LL_SyncPowerCell(bool State)
 {
-	GPIO_SetState(GPIO_SYNC_POWER_CELL, State);
+	if(FWLB_GetSelector() == SID_PCB1_2_Manuf)
+		GPIO_SetState(GPIO_SYNC_POWER_CELL, State);
+	else if(FWLB_GetSelector() == SID_PCB2_0_SCHead)
+		GPIO_SetState(GPIO_SCH_SYNC_POW_CELL, !State);
 }
 //------------------------------------
 
 void LL_SyncScope(bool State)
 {
-	GPIO_SetState(GPIO_SYNC_SCOPE, State);
+	GPIO_SetState((FWLB_GetSelector() == SID_PCB1_2_Manuf) ? GPIO_SYNC_SCOPE : GPIO_SCH_SYNC_SCOPE, State);
 }
 //------------------------------------
 
 bool LL_SyncScopeGetState()
 {
-	return GPIO_GetState(GPIO_SYNC_SCOPE);
+	return GPIO_GetState((FWLB_GetSelector() == SID_PCB1_2_Manuf) ? GPIO_SYNC_SCOPE : GPIO_SCH_SYNC_SCOPE);
 }
 //------------------------------------
 
