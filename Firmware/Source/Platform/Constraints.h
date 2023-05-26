@@ -56,6 +56,9 @@
 #define LSLPC_START_NID_MAX		NODE_ID_MAX
 #define LSLPC_START_NID_DEF		150
 
+// in mV
+#define WARN_MAX_VOLTAGE		10000
+
 // in ms
 #define LONG_TIMEOUT_DEF		60000
 

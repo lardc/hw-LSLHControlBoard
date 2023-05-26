@@ -394,7 +394,9 @@ void LOGIC_SaveResults()
 	//
 	DataTable[REG_DUT_VOLTAGE] = MEASURE_ExtractVoltage((uint16_t *)MEMBUF_DMA_Vd, (uint16_t *)MEMBUF_DMA_Id, Current, VALUES_POWER_DMA_SIZE);
 
-	if((DataTable[REG_DUT_VOLTAGE] > VOLTAGE_MAX_VALUE) || (DataTable[REG_DUT_VOLTAGE] < VOLTAGE_MIN_VALUE))
+	Int16U MinVoltage = (DataTable[REG_VT_WARN_MIN] == 0) ? VOLTAGE_MIN_VALUE : DataTable[REG_VT_WARN_MIN];
+	Int16U MaxVoltage = (DataTable[REG_VT_WARN_MAX] == 0) ? VOLTAGE_MAX_VALUE : DataTable[REG_VT_WARN_MAX];
+	if((DataTable[REG_DUT_VOLTAGE] > MaxVoltage) || (DataTable[REG_DUT_VOLTAGE] < MinVoltage))
 		DataTable[REG_WARNING] = WARNING_VOLTAGE_OUT_OF_RANGE;
 }
 // ----------------------------------------

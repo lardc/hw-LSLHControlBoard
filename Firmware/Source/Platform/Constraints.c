@@ -30,8 +30,8 @@ const TableItemConstraint NVConstraint[DATA_TABLE_NV_SIZE] = {
 		{0, INT16U_MAX, 0},														// 24
 		{GAIN_COEFFICIENT_MIN, GAIN_COEFFICIENT_MAX, GAIN_COEFFICIENT_DEF},		// 25
 		{0, INT16U_MAX, 0},														// 26
-		{0, 0, 0},																// 27
-		{0, 0, 0},																// 28
+		{0, WARN_MAX_VOLTAGE, 0},												// 27
+		{0, WARN_MAX_VOLTAGE, 0},												// 28
 		{0, 0, 0},																// 29
 		{0, NODE_ID_MAX, 0},													// 30
 		{LSLPC_MAX_I_MIN, LSLPC_MAX_I_MAX, LSLPC_MAX_I_DEF},					// 31
