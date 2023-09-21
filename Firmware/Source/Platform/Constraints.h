@@ -52,7 +52,7 @@
 
 // in A
 #define LSLPC_MAX_I_MIN			100
-#define LSLPC_MAX_I_MAX			1650
+#define LSLPC_MAX_I_MAX			6500
 #define LSLPC_MAX_I_DEF			400
 
 //
@@ -89,7 +89,9 @@
 #define GATE_I_DEF				1000
 
 // in A
-#define LSL_CURRENT_MAX			8000
+#define LSL_CURRENT_MIN			50
+#define LSL_CURRENT_MAX			6000
+#define LSL_CURRENT_DEF			100
 
 // in uS
 #define GATE_PULSE_DELAY_MIN	0

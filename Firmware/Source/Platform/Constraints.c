@@ -146,7 +146,7 @@ const TableItemConstraint VConstraint[DATA_TABLE_WP_START - DATA_TABLE_WR_START]
 		{0, 0, 0},																// 137
 		{0, 0, 0},																// 138
 		{0, 0, 0},																// 139
-		{0, LSL_CURRENT_MAX, 0},												// 140
+		{LSL_CURRENT_MIN, LSL_CURRENT_MAX, LSL_CURRENT_DEF},					// 140
 		{0, INT16U_MAX, 0},														// 141
 		{0, 0, 0},																// 142
 		{0, 0, 0},																// 143
