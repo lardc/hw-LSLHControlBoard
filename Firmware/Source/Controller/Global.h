@@ -13,7 +13,7 @@
 #define EP_WRITE_COUNT				0				// Количество массивов для записи
 #define EP_COUNT					4				// Количество массивов для чтения
 #define ENABLE_LOCKING				FALSE			// Защита паролем
-#define VALUES_x_SIZE				500				// Размер выходных массивов
+#define VALUES_x_SIZE				1000			// Размер выходных массивов
 
 // Временные параметры
 #define TIME_LED_BLINK				500				// Период моргания светодиода на плате (в мс)
