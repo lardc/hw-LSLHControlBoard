@@ -34,7 +34,7 @@ void INITCFG_ConfigGPIO()
 	RCC_GPIO_Clk_EN(PORTA);
 	RCC_GPIO_Clk_EN(PORTB);
 	
-	if(FWLB_GetSelector() == SID_PCB1_2_Manuf)
+	if(DataTable[REG_CFG_SCHEAD_PCB] == 0)
 	{
 		// Аналоговые входы
 		GPIO_InitAnalog(GPIO_MEASURE_IG);
@@ -59,7 +59,7 @@ void INITCFG_ConfigGPIO()
 		GPIO_SetState(GPIO_DAC_LDAC, true);
 		GPIO_SetState(GPIO_IG_PULSE, true);
 	}
-	else if(FWLB_GetSelector() == SID_PCB2_0_SCHead)
+	else
 	{
 		// Аналоговые входы
 		GPIO_InitAnalog(GPIO_SCH_MEASURE_ID);
@@ -121,7 +121,7 @@ void INITCFG_ConfigSPI()
 
 void INITCFG_ConfigADC()
 {
-	if(FWLB_GetSelector() == SID_PCB1_2_Manuf)
+	if(DataTable[REG_CFG_SCHEAD_PCB] == 0)
 	{
 		RCC_ADC_Clk_EN(ADC_12_ClkEN);
 		RCC_ADC_Clk_EN(ADC_34_ClkEN);
@@ -166,7 +166,7 @@ void INITCFG_ConfigADC()
 		ADC_SamplingStart(ADC1);
 		ADC_SamplingStart(ADC3);
 	}
-	else if(FWLB_GetSelector() == SID_PCB2_0_SCHead)
+	else
 	{
 		RCC_ADC_Clk_EN(ADC_12_ClkEN);
 		ADC_Calibration(ADC1);
@@ -223,7 +223,7 @@ void INITCFG_ConfigTimer2()
 
 void INITCFG_ConfigDMA()
 {
-	if(FWLB_GetSelector() == SID_PCB1_2_Manuf)
+	if(DataTable[REG_CFG_SCHEAD_PCB] == 0)
 	{
 		DMA_Clk_Enable(DMA1_ClkEN);
 		DMA_Clk_Enable(DMA2_ClkEN);
@@ -252,7 +252,7 @@ void INITCFG_ConfigDMA()
 		DMAChannelX_Config(DMA_ADC_VD_CHANNEL, DMA_MEM2MEM_DIS, DMA_LvlPriority_LOW, DMA_MSIZE_16BIT, DMA_PSIZE_16BIT,
 				DMA_MINC_EN, DMA_PINC_DIS, DMA_CIRCMODE_DIS, DMA_READ_FROM_PERIPH);
 	}
-	else if(FWLB_GetSelector() == SID_PCB2_0_SCHead)
+	else
 	{
 		DMA_Clk_Enable(DMA1_ClkEN);
 

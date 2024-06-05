@@ -21,7 +21,7 @@ uint16_t GATE_ConvertIgToDAC(uint16_t Value);
 //
 void GATE_PulseOutput(bool State)
 {
-	GPIO_SetState((FWLB_GetSelector() == SID_PCB1_2_Manuf) ? GPIO_IG_PULSE : GPIO_SCH_IG_PULSE, !State);
+	GPIO_SetState((DataTable[REG_CFG_SCHEAD_PCB] == 0) ? GPIO_IG_PULSE : GPIO_SCH_IG_PULSE, !State);
 }
 //------------------------------------
 
@@ -64,14 +64,14 @@ uint16_t GATE_ConvertIgToDAC(uint16_t Value)
 
 void GATE_SetVg(uint16_t Value)
 {
-	if(FWLB_GetSelector() == SID_PCB1_2_Manuf)
+	if(DataTable[REG_CFG_SCHEAD_PCB] == 0)
 		LL_WriteDAC_ChB(GATE_ConvertVgToDAC(Value));
 }
 //------------------------------------
 
 void GATE_SetIg(uint16_t Value)
 {
-	if(FWLB_GetSelector() == SID_PCB1_2_Manuf)
+	if(DataTable[REG_CFG_SCHEAD_PCB] == 0)
 		LL_WriteDAC_ChA(GATE_ConvertIgToDAC(Value));
 }
 //------------------------------------

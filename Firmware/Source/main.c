@@ -23,7 +23,7 @@ int main()
 	INITCFG_ConfigADC();
 	INITCFG_ConfigTimer3();
 	INITCFG_ConfigTimer1();
-	if(FWLB_GetSelector() == SID_PCB1_2_Manuf)
+	if(DataTable[REG_CFG_SCHEAD_PCB] == 0)
 	{
 		INITCFG_ConfigTimer2();
 		INITCFG_ConfigTimer6();

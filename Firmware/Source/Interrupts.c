@@ -53,7 +53,7 @@ void TIM6_DAC_IRQHandler()
 
 bool IT_DMASampleCompleted()
 {
-	return (FWLB_GetSelector() == SID_PCB1_2_Manuf) ?
+	return (DataTable[REG_CFG_SCHEAD_PCB] == 0) ?
 			IgCompleted && VgCompleted && IdCompleted && VdCompleted : IdVdCompleted;
 }
 //-----------------------------------------

@@ -5,6 +5,7 @@
 #include "Board.h"
 #include "Delay.h"
 #include "FirmwareLabel.h"
+#include "DataTable.h"
 
 // Definitions
 #define DAC_CHANNEL_B		BIT15
@@ -20,15 +21,15 @@ void LL_WriteToShuntAmpl(uint8_t Data);
 //
 void LL_ToggleBoardLED()
 {
-	GPIO_Toggle((FWLB_GetSelector() == SID_PCB1_2_Manuf) ? GPIO_LED : GPIO_SCH_LED);
+	GPIO_Toggle((DataTable[REG_CFG_SCHEAD_PCB] == 0) ? GPIO_LED : GPIO_SCH_LED);
 }
 //------------------------------------
 
 void LL_IdLowRange(bool State)
 {
-	if(FWLB_GetSelector() == SID_PCB1_2_Manuf)
+	if(DataTable[REG_CFG_SCHEAD_PCB] == 0)
 		GPIO_SetState(GPIO_ID_LOW_RANGE, !State);
-	else if(FWLB_GetSelector() == SID_PCB2_0_SCHead)
+	else
 	{
 		IdLowRange = State;
 		LL_WriteToShuntAmpl(State ? 0x4 : 0x0);
@@ -38,33 +39,31 @@ void LL_IdLowRange(bool State)
 
 bool LL_IsIdLowRange()
 {
-	if(FWLB_GetSelector() == SID_PCB1_2_Manuf)
+	if(DataTable[REG_CFG_SCHEAD_PCB] == 0)
 		return !GPIO_GetState(GPIO_ID_LOW_RANGE);
-	else if(FWLB_GetSelector() == SID_PCB2_0_SCHead)
-		return IdLowRange;
 	else
-		return false;
+		return IdLowRange;
 }
 //------------------------------------
 
 void LL_SyncPowerCell(bool State)
 {
-	if(FWLB_GetSelector() == SID_PCB1_2_Manuf)
+	if(DataTable[REG_CFG_SCHEAD_PCB] == 0)
 		GPIO_SetState(GPIO_SYNC_POWER_CELL, State);
-	else if(FWLB_GetSelector() == SID_PCB2_0_SCHead)
+	else
 		GPIO_SetState(GPIO_SCH_SYNC_POW_CELL, !State);
 }
 //------------------------------------
 
 void LL_SyncScope(bool State)
 {
-	GPIO_SetState((FWLB_GetSelector() == SID_PCB1_2_Manuf) ? GPIO_SYNC_SCOPE : GPIO_SCH_SYNC_SCOPE, State);
+	GPIO_SetState((DataTable[REG_CFG_SCHEAD_PCB] == 0) ? GPIO_SYNC_SCOPE : GPIO_SCH_SYNC_SCOPE, State);
 }
 //------------------------------------
 
 bool LL_SyncScopeGetState()
 {
-	return GPIO_GetState((FWLB_GetSelector() == SID_PCB1_2_Manuf) ? GPIO_SYNC_SCOPE : GPIO_SCH_SYNC_SCOPE);
+	return GPIO_GetState((DataTable[REG_CFG_SCHEAD_PCB] == 0) ? GPIO_SYNC_SCOPE : GPIO_SCH_SYNC_SCOPE);
 }
 //------------------------------------
 

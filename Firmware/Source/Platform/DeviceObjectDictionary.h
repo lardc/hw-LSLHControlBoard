@@ -89,6 +89,7 @@
 #define REG_OSC_SYNC_TUNE_DELAY			60	// Подстройка импульса синхронизации под вершину синуса (мкс)
 
 #define REG_CFG_CAN_NODE_ID				70	// Регистр переопределения CAN NodeID
+#define REG_CFG_SCHEAD_PCB				71	// Использование старой ПП SCHead
 
 // Несохраняемы регистры чтения-записи
 #define REG_CURRENT_SETPOINT			140	// Уставка тока (в А)

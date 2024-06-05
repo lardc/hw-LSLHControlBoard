@@ -287,7 +287,7 @@ void LOGIC_ProcessPulse()
 
 	// Подготовка оцифровки
 	IT_DMAFlagsReset();
-	if(FWLB_GetSelector() == SID_PCB1_2_Manuf)
+	if(DataTable[REG_CFG_SCHEAD_PCB] == 0)
 	{
 		DMA_ChannelReload(DMA_ADC_IG_CHANNEL, VALUES_GATE_DMA_SIZE);
 		DMA_ChannelReload(DMA_ADC_VG_CHANNEL, VALUES_GATE_DMA_SIZE);
@@ -298,7 +298,7 @@ void LOGIC_ProcessPulse()
 		DMA_ChannelEnable(DMA_ADC_ID_CHANNEL, true);
 		DMA_ChannelEnable(DMA_ADC_VD_CHANNEL, true);
 	}
-	else if(FWLB_GetSelector() == SID_PCB2_0_SCHead)
+	else
 	{
 		DMA_ChannelReload(DMA_ADC, VALUES_POWER_DMA_SIZE * 2);
 		DMA_ChannelEnable(DMA_ADC, true);
@@ -316,7 +316,7 @@ void LOGIC_ProcessPulse()
 		DELAY_US(GatePulseDelay);
 
 	// Запуск оцифровки импульса тока и напряжения в цепи управления
-	if(FWLB_GetSelector() == SID_PCB1_2_Manuf)
+	if(DataTable[REG_CFG_SCHEAD_PCB] == 0)
 		TIM_Start(TIM2);
 
 	// Сигнал отпирания DUT
@@ -328,14 +328,14 @@ void LOGIC_ProcessPulse()
 	// Синхронизация осциллографа, если не задано превышение уставки
 	if(!DataTable[REG_CURRENT_OVERSHOOT])
 		LL_SyncScope(false);
-	else if(FWLB_GetSelector() == SID_PCB1_2_Manuf)
+	else if(DataTable[REG_CFG_SCHEAD_PCB] == 0)
 		TIM_Start(TIM6);	// Запуск таймера определения момента синхронизации
 
 	// Завершение оцифровки
 	while(!IT_DMASampleCompleted());
 
 	TIM_Stop(TIM1);
-	if(FWLB_GetSelector() == SID_PCB1_2_Manuf)
+	if(DataTable[REG_CFG_SCHEAD_PCB] == 0)
 	{
 		TIM_Stop(TIM2);
 		TIM_Stop(TIM6);
@@ -343,7 +343,7 @@ void LOGIC_ProcessPulse()
 	LL_SyncPowerCell(false);
 
 	// Копирование значений для совместимости
-	if(FWLB_GetSelector() == SID_PCB2_0_SCHead)
+	if(DataTable[REG_CFG_SCHEAD_PCB])
 		MEASURE_CopyFromDMA((uint32_t *)MEMBUF_DMA, (uint16_t *)MEMBUF_DMA_Id, (uint16_t *)MEMBUF_DMA_Vd);
 
 	// Пересчёт значений
@@ -353,7 +353,7 @@ void LOGIC_ProcessPulse()
 	else
 		MEASURE_ConvertId((uint16_t *)MEMBUF_DMA_Id, VALUES_POWER_DMA_SIZE);
 
-	if(FWLB_GetSelector() == SID_PCB1_2_Manuf)
+	if(DataTable[REG_CFG_SCHEAD_PCB] == 0)
 	{
 		MEASURE_ConvertVg((uint16_t *)MEMBUF_DMA_Vg, VALUES_GATE_DMA_SIZE);
 		MEASURE_ConvertIg((uint16_t *)MEMBUF_DMA_Ig, VALUES_GATE_DMA_SIZE);
@@ -377,7 +377,7 @@ void LOGIC_SaveToEndpoint(volatile Int16U *InputArray, Int16U *OutputArray, uint
 
 void LOGIC_SaveResults()
 {
-	if(FWLB_GetSelector() == SID_PCB1_2_Manuf)
+	if(DataTable[REG_CFG_SCHEAD_PCB] == 0)
 	{
 		DataTable[REG_GATE_VOLTAGE] = MEASURE_ExtractMaxValues((uint16_t *)MEMBUF_DMA_Vg, VALUES_GATE_DMA_SIZE);
 		DataTable[REG_GATE_CURRENT] = MEASURE_ExtractMaxValues((uint16_t *)MEMBUF_DMA_Ig, VALUES_GATE_DMA_SIZE);
