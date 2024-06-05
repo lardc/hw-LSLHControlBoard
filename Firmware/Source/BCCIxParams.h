@@ -11,7 +11,7 @@
 // Маска поля функции
 //
 #define CAN_FUNC_MASK				0x000003FF
-#define CAN_NID						9				// Node ID устройства
+#define CAN_NID						2				// Node ID устройства
 
 // Конфигурация Slave
 //
