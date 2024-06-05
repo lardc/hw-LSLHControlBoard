@@ -69,15 +69,9 @@ void CONTROL_Init()
 	pInt16U EPDatas[EP_COUNT] = {(pInt16U)MEMBUF_EP_Id, (pInt16U)MEMBUF_EP_Vd, (pInt16U)MEMBUF_EP_Ig,
 			(pInt16U)MEMBUF_EP_Vg};
 	
-	// Конфигурация сервиса работы Data-table и EPROM
-	EPROMServiceConfig EPROMService = {(FUNC_EPROM_WriteValues)&NFLASH_WriteDT, (FUNC_EPROM_ReadValues)&NFLASH_ReadDT};
-	
 	// Определение используемого CAN NodeID
-	Int16U NodeID = (DataTable[REG_ALTER_CAN_NODE_ID] == 0) ? CAN_NID : DataTable[REG_ALTER_CAN_NODE_ID];
+	Int16U NodeID = DataTable[REG_CFG_CAN_NODE_ID] ? DataTable[REG_CFG_CAN_NODE_ID] : CAN_NID;
 	INITCFG_ConfigCANFilters(NodeID);
-
-	// Инициализация data table
-	DT_Init(EPROMService, false);
 	DT_SaveFirmwareInfo(NodeID);
 	
 	// Инициализация device profile

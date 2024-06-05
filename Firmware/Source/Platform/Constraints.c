@@ -33,7 +33,7 @@ const TableItemConstraint NVConstraint[DATA_TABLE_NV_SIZE] = {
 		{0, WARN_MAX_VOLTAGE, 0},												// 27
 		{0, WARN_MAX_VOLTAGE, 0},												// 28
 		{0, 0, 0},																// 29
-		{0, NODE_ID_MAX, 0},													// 30
+		{0, 0, 0},																// 30
 		{LSLPC_MAX_I_MIN, LSLPC_MAX_I_MAX, LSLPC_MAX_I_DEF},					// 31
 		{LSLPC_START_NID_MIN, LSLPC_START_NID_MAX, LSLPC_START_NID_DEF},		// 32
 		{0, INT16U_MAX, LONG_TIMEOUT_DEF},										// 33
@@ -73,7 +73,7 @@ const TableItemConstraint NVConstraint[DATA_TABLE_NV_SIZE] = {
 		{0, 0, 0}, 																// 67
 		{0, 0, 0},																// 68
 		{0, 0, 0},																// 69
-		{0, 0, 0},																// 70
+		{0, NODE_ID_MAX, 0},													// 70
 		{0, 0, 0},																// 71
 		{0, 0, 0},																// 72
 		{0, 0, 0},																// 73

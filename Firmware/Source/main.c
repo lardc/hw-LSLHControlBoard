@@ -1,6 +1,7 @@
 ﻿#include "InitConfig.h"
 #include "Controller.h"
 #include "SysConfig.h"
+#include "DataTable.h"
 #include "FirmwareLabel.h"
 
 int main()
@@ -9,9 +10,12 @@ int main()
 	SCB->VTOR = (uint32_t)BOOT_LOADER_MAIN_PR_ADDR;
 	__enable_irq();
 	
-	// Настройка аппаратной периферии
+	// Настройка тактирования
 	INITCFG_ConfigSystemClock();
+
+	// Настройка аппаратной периферии
 	FWLB_LoadBoardLabel();
+	INITCFG_DataTableEEPROM();
 	INITCFG_ConfigGPIO();
 	INITCFG_ConfigCAN();
 	INITCFG_ConfigUART();

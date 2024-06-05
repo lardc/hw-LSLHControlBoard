@@ -6,6 +6,7 @@
 // Functions
 //
 void INITCFG_ConfigSystemClock();
+void INITCFG_DataTableEEPROM();
 void INITCFG_ConfigGPIO();
 void INITCFG_ConfigCAN();
 void INITCFG_ConfigCANFilters(Int16U NodeID);

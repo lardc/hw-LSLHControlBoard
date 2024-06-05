@@ -10,6 +10,7 @@
 #include "LowLevel.h"
 #include "GateDriver.h"
 #include "FirmwareLabel.h"
+#include "DataTable.h"
 
 // Functions
 //
@@ -17,6 +18,13 @@ void INITCFG_ConfigSystemClock()
 {
 	RCC_PLL_HSE_Config(QUARTZ_FREQUENCY, PREDIV_4, PLL_14);
 	RCC_SysCfg_Clk_EN();
+}
+//------------------------------------
+
+void INITCFG_DataTableEEPROM()
+{
+	EPROMServiceConfig EPROMService = {(FUNC_EPROM_WriteValues)&NFLASH_WriteDT, (FUNC_EPROM_ReadValues)&NFLASH_ReadDT};
+	DT_Init(EPROMService, false);
 }
 //------------------------------------
 
