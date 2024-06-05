@@ -9,7 +9,6 @@
 #include "DeviceObjectDictionary.h"
 #include "LowLevel.h"
 #include "Delay.h"
-#include "FirmwareLabel.h"
 
 // Forward functions
 uint16_t GATE_ConvertValueToDAC(uint16_t Value, uint16_t RegisterOffset, uint16_t RegisterK, uint16_t RegisterP0,

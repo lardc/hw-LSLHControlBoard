@@ -9,7 +9,6 @@
 #include "DataTable.h"
 #include "Measurement.h"
 #include "MemBuffers.h"
-#include "FirmwareLabel.h"
 
 // Variables
 //

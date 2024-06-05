@@ -13,10 +13,8 @@
 #include "LowLevel.h"
 #include "BCCIxParams.h"
 #include "InitConfig.h"
-#include "FirmwareLabel.h"
 
 // Types
-//
 typedef void (*FUNC_AsyncDelegate)();
 typedef enum __SubState
 {

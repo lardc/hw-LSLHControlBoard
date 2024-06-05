@@ -9,7 +9,6 @@
 #include "Global.h"
 #include "LowLevel.h"
 #include "GateDriver.h"
-#include "FirmwareLabel.h"
 #include "DataTable.h"
 
 // Functions

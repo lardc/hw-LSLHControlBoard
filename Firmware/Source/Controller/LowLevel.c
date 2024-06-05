@@ -4,7 +4,6 @@
 // Include
 #include "Board.h"
 #include "Delay.h"
-#include "FirmwareLabel.h"
 #include "DataTable.h"
 
 // Definitions

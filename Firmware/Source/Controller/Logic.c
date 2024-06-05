@@ -21,7 +21,6 @@
 #include "ZwTIM.h"
 #include "Global.h"
 #include "math.h"
-#include "FirmwareLabel.h"
 
 // Definitions
 //

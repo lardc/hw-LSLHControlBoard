@@ -2,7 +2,6 @@
 #include "Controller.h"
 #include "SysConfig.h"
 #include "DataTable.h"
-#include "FirmwareLabel.h"
 
 int main()
 {
@@ -14,7 +13,6 @@ int main()
 	INITCFG_ConfigSystemClock();
 
 	// Настройка аппаратной периферии
-	FWLB_LoadBoardLabel();
 	INITCFG_DataTableEEPROM();
 	INITCFG_ConfigGPIO();
 	INITCFG_ConfigCAN();

@@ -21,8 +21,6 @@
 #define ACT_RESET_TO_DEFAULT			202	// Сброс DataTable в состояние по умолчанию
 
 #define ACT_BOOT_LOADER_REQUEST			320	// Перезапуск процессора с целью перепрограммирования
-#define ACT_WRITE_LABEL1				321	// Записать первую метку: LSLControlBoard v.1.2 [Manufacturing]
-#define ACT_WRITE_LABEL2				322	// Записать первую метку: SCHead v.2.0
 #define ACT_READ_SYMBOL					330	// Выполнить чтение символа из памяти
 #define ACT_SELECT_MEM_LABEL			331	// Переместить указатель считывания в область метки
 // -----------------------------

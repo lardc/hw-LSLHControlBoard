@@ -14,7 +14,6 @@
 #include "ZwNCAN.h"
 #include "ZwSCI.h"
 #include "BCCIMHighLevel.h"
-#include "LabelDescription.h"
 
 // Types
 //
@@ -191,20 +190,8 @@ static Boolean DEVPROFILE_DispatchAction(Int16U ActionID, pInt16U UserError)
 			BOOT_LOADER_VARIABLE = BOOT_LOADER_REQUEST;
 			break;
 
-		case ACT_WRITE_LABEL1:
-			FWLB_WriteBoardLabel(0);
-			break;
-
-		case ACT_WRITE_LABEL2:
-			FWLB_WriteBoardLabel(1);
-			break;
-
 		case ACT_READ_SYMBOL:
 			DataTable[REG_MEM_SYMBOL] = *(pInt16U)(MemoryPointer++);
-			break;
-
-		case ACT_SELECT_MEM_LABEL:
-			MemoryPointer = LABEL_START_ADDRESS;
 			break;
 
 		default:
