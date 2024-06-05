@@ -74,7 +74,7 @@ const TableItemConstraint NVConstraint[DATA_TABLE_NV_SIZE] = {
 		{0, 0, 0},																// 68
 		{0, 0, 0},																// 69
 		{0, NODE_ID_MAX, 0},													// 70
-		{0, 0, 0},																// 71
+		{0, 1, 0},																// 71
 		{0, 0, 0},																// 72
 		{0, 0, 0},																// 73
 		{0, 0, 0},																// 74
