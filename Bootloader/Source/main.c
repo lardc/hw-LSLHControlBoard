@@ -58,8 +58,8 @@ void IO_Config()
 	RCC_GPIO_Clk_EN(PORTB);
 
 	// Выходы
-	GPIO_Config (GPIOB, Pin_12, Output, PushPull, HighSpeed, NoPull);	// PB12 - LED
-	GPIO_Bit_Rst(GPIOB, Pin_12);
+	GPIO_Config (LED_BLINK_PORT, LED_BLINK_PIN, Output, PushPull, HighSpeed, NoPull);
+	GPIO_Bit_Rst(LED_BLINK_PORT, LED_BLINK_PIN);
 
 	// Альтернативные функции портов
 	GPIO_Config(GPIOA, Pin_9, AltFn, PushPull, HighSpeed, NoPull);		// PA9(USART1 TX)
