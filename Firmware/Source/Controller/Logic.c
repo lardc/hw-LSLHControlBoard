@@ -156,8 +156,29 @@ bool LOGIC_WriteCellsConfig()
 	{
 		if(PC_DataArray[i].IsActive)
 		{
-			if(!BHL_WriteRegister(i + CachedStartNid, REG_LSLPC_PULSE_VALUE, PC_DataArray[i].Current * 10))
-				return false;
+			// Разбиение задания тока на два регистра
+			if(DataTable[REG_CFG_HIGH_CURRENT_CELL])
+			{
+				const float MaxCurrentPerRegister = 6500;
+				float Current = 0, CurrentAdd = 0;
+				if(PC_DataArray[i].Current > MaxCurrentPerRegister)
+				{
+					Current = MaxCurrentPerRegister;
+					CurrentAdd = PC_DataArray[i].Current - MaxCurrentPerRegister;
+				}
+				else
+					Current = PC_DataArray[i].Current;
+
+				if(!BHL_WriteRegister(i + CachedStartNid, REG_LSLPC_PULSE_VALUE, Current * 10))
+					return false;
+				if(!BHL_WriteRegister(i + CachedStartNid, REG_LSLPC_PULSE_VALUE_ADD, CurrentAdd * 10))
+					return false;
+			}
+
+			// Запись задания тока в один регистр
+			else
+				if(!BHL_WriteRegister(i + CachedStartNid, REG_LSLPC_PULSE_VALUE, PC_DataArray[i].Current * 10))
+					return false;
 
 			if(!BHL_WriteRegister(i + CachedStartNid, REG_LSLPC_PULSE_MODE, PC_DataArray[i].PulseMode ? 1 : 0))
 				return false;

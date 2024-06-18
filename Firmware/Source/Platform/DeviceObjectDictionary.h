@@ -88,6 +88,7 @@
 
 #define REG_CFG_CAN_NODE_ID				70	// Регистр переопределения CAN NodeID
 #define REG_CFG_SCHEAD_PCB				71	// Использование старой ПП SCHead
+#define REG_CFG_HIGH_CURRENT_CELL		72	// Использование с ячейкой с рабочим током > 6500А
 
 // Несохраняемы регистры чтения-записи
 #define REG_CURRENT_SETPOINT			140	// Уставка тока (в А)
@@ -144,7 +145,8 @@
 // -----------------------------
 
 // Регистры LSLPC
-#define REG_LSLPC_PULSE_VALUE			128	// Значение амплитуды импульса тока (в А)
+#define REG_LSLPC_PULSE_VALUE			128	// Значение амплитуды импульса тока (в А х10)
+#define REG_LSLPC_PULSE_VALUE_ADD		129	// Значение амплитуды импульса тока, добавка (в А х10)
 #define REG_LSLPC_PULSE_MODE			130	// Формирование модицифированного синус сигнала
 
 #define REG_LSLPC_DEV_STATE				192	// Состояние блока
