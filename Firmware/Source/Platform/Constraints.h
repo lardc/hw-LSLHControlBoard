@@ -49,7 +49,7 @@
 
 // in A
 #define LSLPC_MAX_I_MIN			100
-#define LSLPC_MAX_I_MAX			1650
+#define LSLPC_MAX_I_MAX			6500
 #define LSLPC_MAX_I_DEF			400
 
 #define LSLPC_START_NID_MIN		1
