@@ -15,7 +15,7 @@
 // in uOhm
 #define R_SHUNT_MIN				0
 #define R_SHUNT_MAX				2000
-#define R_SHUNT_DEF				750
+#define R_SHUNT_DEF				250
 
 // in A
 #define LOW_RANGE_I_LIM_MIN		0
@@ -50,7 +50,7 @@
 // in A
 #define LSLPC_MAX_I_MIN			100
 #define LSLPC_MAX_I_MAX			6500
-#define LSLPC_MAX_I_DEF			400
+#define LSLPC_MAX_I_DEF			6500
 
 #define LSLPC_START_NID_MIN		1
 #define LSLPC_START_NID_MAX		NODE_ID_MAX
