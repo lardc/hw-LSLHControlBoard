@@ -25,7 +25,8 @@
 // Definitions
 //
 #define ARR_START_INDEX_SHIFT			700
-#define MAX_CURRENT_OVERSET				10		// Допустимое превышение по уставке тока, в %
+#define LSLPC_PARALLEL_CURRENT			800		// С этого тока обе ячейки делят уставку поровну, А
+#define LSLPC_REG_CURRENT_MAX			65000	// Максимум одного регистра задания ячейки, А × 10
 
 // Types
 //
@@ -33,7 +34,7 @@ typedef struct __PCStructData
 {
 	bool IsActive;
 	PCDeviceState State;
-	uint16_t Current;
+	uint32_t Current;		// А × 10
 	bool PulseMode;
 } PCData, *pPCData;
 
@@ -97,6 +98,9 @@ bool LOGIC_CallCommandForCells(uint16_t Command)
 	{
 		if(PC_DataArray[i].IsActive)
 		{
+			if(Command == ACT_LSLPC_PULSE_CONFIG && PC_DataArray[i].Current == 0)
+				continue;
+
 			if(!BHL_Call(i + CachedStartNid, Command))
 				return false;
 		}
@@ -130,7 +134,11 @@ bool LOGIC_AreCellsInStateX(uint16_t State)
 	
 	for(uint16_t i = 0; i < LSLPC_COUNT_MAX; ++i)
 	{
-		if(PC_DataArray[i].IsActive && PC_DataArray[i].State != State)
+		if(!PC_DataArray[i].IsActive)
+			continue;
+		if(State == PCDS_PulseConfigReady && PC_DataArray[i].Current == 0)
+			continue;
+		if(PC_DataArray[i].State != State)
 			result = false;
 	}
 	
@@ -156,29 +164,30 @@ bool LOGIC_WriteCellsConfig()
 	{
 		if(PC_DataArray[i].IsActive)
 		{
-			// Разбиение задания тока на два регистра
+			if(PC_DataArray[i].Current == 0)
+				continue;
+
+			// Разбиение задания тока на два регистра. Current уже в А × 10
 			if(DataTable[REG_CFG_HIGH_CURRENT_CELL])
 			{
-				const float MaxCurrentPerRegister = 6500;
-				float Current = 0, CurrentAdd = 0;
-				if(PC_DataArray[i].Current > MaxCurrentPerRegister)
+				const uint32_t MaxCurrentPerRegister = LSLPC_REG_CURRENT_MAX;
+				uint32_t Value = PC_DataArray[i].Current;
+				uint32_t ValueAdd = 0;
+				if(Value > MaxCurrentPerRegister)
 				{
-					Current = MaxCurrentPerRegister;
-					CurrentAdd = PC_DataArray[i].Current - MaxCurrentPerRegister;
+					ValueAdd = Value - MaxCurrentPerRegister;
+					Value = MaxCurrentPerRegister;
 				}
-				else
-					Current = PC_DataArray[i].Current;
 
-				if(!BHL_WriteRegister(i + CachedStartNid, REG_LSLPC_PULSE_VALUE, Current * 10))
+				if(!BHL_WriteRegister(i + CachedStartNid, REG_LSLPC_PULSE_VALUE, (uint16_t)Value))
 					return false;
-				if(!BHL_WriteRegister(i + CachedStartNid, REG_LSLPC_PULSE_VALUE_ADD, CurrentAdd * 10))
+				if(!BHL_WriteRegister(i + CachedStartNid, REG_LSLPC_PULSE_VALUE_ADD, (uint16_t)ValueAdd))
 					return false;
 			}
 
 			// Запись задания тока в один регистр
-			else
-				if(!BHL_WriteRegister(i + CachedStartNid, REG_LSLPC_PULSE_VALUE, PC_DataArray[i].Current * 10))
-					return false;
+			else if(!BHL_WriteRegister(i + CachedStartNid, REG_LSLPC_PULSE_VALUE, (uint16_t)PC_DataArray[i].Current))
+				return false;
 
 			if(!BHL_WriteRegister(i + CachedStartNid, REG_LSLPC_PULSE_MODE, PC_DataArray[i].PulseMode ? 1 : 0))
 				return false;
@@ -199,15 +208,20 @@ bool LOGIC_SetCurrentForCertainBlock(uint16_t Nid, float Current)
 	if(!PC_DataArray[Nid - CachedStartNid].IsActive)
 		return false;
 	
-	// Ток превышает допустимый диапазон
-	if((uint16_t)Current > DataTable[REG_PC_MAX_CURRENT])
+	uint32_t CurrentTenths = (uint32_t)(Current * 10.0f + 0.5f);
+	uint32_t MaxTenths = (uint32_t)DataTable[REG_PC_MAX_CURRENT] * 10;
+	if(!DataTable[REG_CFG_HIGH_CURRENT_CELL] && MaxTenths > LSLPC_REG_CURRENT_MAX)
+		MaxTenths = LSLPC_REG_CURRENT_MAX;
+
+	// Ток превышает допустимый диапазон ячейки
+	if(CurrentTenths == 0 || CurrentTenths > MaxTenths)
 		return false;
 	
 	// Очистка уставки тока для всех ячеек
 	LOGIC_ResetCellsCurrent();
 	
 	// Конфигурация требуемой ячейки
-	PC_DataArray[Nid - CachedStartNid].Current = (uint16_t)Current;
+	PC_DataArray[Nid - CachedStartNid].Current = CurrentTenths;
 	
 	return true;
 }
@@ -215,21 +229,14 @@ bool LOGIC_SetCurrentForCertainBlock(uint16_t Nid, float Current)
 
 bool LOGIC_DistributeCurrent(float Current)
 {
-	uint32_t IntCurrent = (uint32_t)Current;
-	
-	// Ток превышает допустимый диапазон
-	uint32_t MaxTesterCurrent = (uint32_t)CachedCellMaxCurrent * ActiveCellsCounter;
-	if(IntCurrent > MaxTesterCurrent)
-	{
-		if(100L * (IntCurrent - MaxTesterCurrent) / MaxTesterCurrent >= MAX_CURRENT_OVERSET)
-			DataTable[REG_WARNING] = WARNING_CURRENT_OUT_OF_RANGE;
+	if(ActiveCellsCounter == 0 || CachedCellMaxCurrent == 0)
+		return false;
 
-		IntCurrent = MaxTesterCurrent;
-	}
-	
-	// Определение целой и дробной частей уставки тока
-	uint16_t FractionCurrent = IntCurrent % CachedCellMaxCurrent;
-	uint16_t NoFractionCurrent = IntCurrent - FractionCurrent;
+	uint32_t CurrentTenths = (uint32_t)(Current * 10.0f + 0.5f);
+	uint32_t MaxTenths = (uint32_t)CachedCellMaxCurrent * 10;
+	// Выше 6500 А задание не помещается в регистр 128 и требует сложения с регистром 129
+	if(!DataTable[REG_CFG_HIGH_CURRENT_CELL] && MaxTenths > LSLPC_REG_CURRENT_MAX)
+		MaxTenths = LSLPC_REG_CURRENT_MAX;
 
 	// Очистка уставки тока для всех ячеек
 	LOGIC_ResetCellsCurrent();
@@ -241,24 +248,29 @@ bool LOGIC_DistributeCurrent(float Current)
 			PC_DataArray[i].PulseMode = DataTable[REG_PULSE_MODE];
 	}
 
-	// Запись значений тока
-	for(uint16_t i = 0; i < LSLPC_COUNT_MAX; ++i)
+	// До 800 А ток формирует одна ячейка. С 800 А обе делят его поровну, шаг 0,1 А
+	uint16_t CellsInPulse = 1;
+	if(ActiveCellsCounter > 1 && CurrentTenths >= (uint32_t)LSLPC_PARALLEL_CURRENT * 10)
+		CellsInPulse = ActiveCellsCounter;
+
+	uint32_t Share = CurrentTenths / CellsInPulse;
+	uint32_t Remainder = CurrentTenths % CellsInPulse;
+	if(Share + Remainder > MaxTenths)
+		return false;
+
+	uint32_t CurrentLeft = CurrentTenths;
+	uint16_t CellsLeft = CellsInPulse;
+
+	for(uint16_t i = 0; i < LSLPC_COUNT_MAX && CellsLeft > 0; ++i)
 	{
-		if(PC_DataArray[i].IsActive)
-		{
-			if(FractionCurrent > 0)
-			{
-				PC_DataArray[i].Current = FractionCurrent;
-				FractionCurrent = 0;
-			}
-			else if(NoFractionCurrent > 0)
-			{
-				PC_DataArray[i].Current = CachedCellMaxCurrent;
-				NoFractionCurrent -= CachedCellMaxCurrent;
-			}
-			else
-				PC_DataArray[i].Current = 0;
-		}
+		if(!PC_DataArray[i].IsActive)
+			continue;
+
+		uint32_t CellTenths = CurrentLeft / CellsLeft;
+		if(CellTenths > 0)
+			PC_DataArray[i].Current = CellTenths;
+		CurrentLeft -= CellTenths;
+		--CellsLeft;
 	}
 	
 	return true;
