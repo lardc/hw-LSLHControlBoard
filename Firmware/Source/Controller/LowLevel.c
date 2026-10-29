@@ -56,13 +56,19 @@ void LL_SyncPowerCell(bool State)
 
 void LL_SyncScope(bool State)
 {
-	GPIO_SetState((DataTable[REG_CFG_SCHEAD_PCB] == 0) ? GPIO_SYNC_SCOPE : GPIO_SCH_SYNC_SCOPE, State);
+	if(DataTable[REG_CFG_SCHEAD_PCB] == 0)
+		GPIO_SetState(GPIO_SYNC_SCOPE, State);
+	else
+		GPIO_SetState(GPIO_SCH_SYNC_SCOPE, !State);
 }
 //------------------------------------
 
 bool LL_SyncScopeGetState()
 {
-	return GPIO_GetState((DataTable[REG_CFG_SCHEAD_PCB] == 0) ? GPIO_SYNC_SCOPE : GPIO_SCH_SYNC_SCOPE);
+	if(DataTable[REG_CFG_SCHEAD_PCB] == 0)
+		return GPIO_GetState(GPIO_SYNC_SCOPE);
+	else
+		return !GPIO_GetState(GPIO_SCH_SYNC_SCOPE);
 }
 //------------------------------------
 
